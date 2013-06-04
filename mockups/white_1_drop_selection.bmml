@@ -1,0 +1,195 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1002" measuredH="599" mockupW="964" mockupH="560">
+  <controls>
+    <control controlID="48" controlTypeID="__group__" x="38" y="39" w="964" h="560" measuredW="964" measuredH="560" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <controlName>Overall</controlName>
+      </controlProperties>
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="964" h="560" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="48"/>
+        <control controlID="1" controlTypeID="__group__" x="14" y="34" w="231" h="511" measuredW="231" measuredH="511" zOrder="1" locked="false" isInGroup="48">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="__group__" x="125" y="0" w="106" h="97" measuredW="106" measuredH="97" zOrder="0" locked="false" isInGroup="1">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="106" h="97" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <text>Preset</text>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::RadioButtonGroup" x="8" y="15" w="91" h="82" measuredW="69" measuredH="63" zOrder="1" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <text>%28o%29%20Cube%0A%28%20%29%20Deck%0A%28%20%29%20Sealed</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="5" y="0" w="106" h="97" measuredW="106" measuredH="97" zOrder="1" locked="false" isInGroup="1">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="__group__" x="0" y="0" w="106" h="97" measuredW="106" measuredH="97" zOrder="0" locked="false" isInGroup="1">
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="106" h="97" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <text>Hierarchy</text>
+                      </controlProperties>
+                    </control>
+                    <control controlID="1" controlTypeID="com.balsamiq.mockups::CheckBoxGroup" x="10" y="16" w="96" h="79" measuredW="64" measuredH="63" zOrder="1" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <text>%5Bx%5D%20Color%0A%5Bx%5D%20Type%0A%5Bx%5D%20CMC</text>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="17" w="100" h="23" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <backgroundAlpha>0.5</backgroundAlpha>
+                    <borderStyle>none</borderStyle>
+                    <color>10470904</color>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="2" controlTypeID="__group__" x="0" y="102" w="229" h="409" measuredW="229" measuredH="409" zOrder="2" locked="false" isInGroup="1">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="__group__" x="0" y="0" w="229" h="409" measuredW="229" measuredH="409" zOrder="0" locked="false" isInGroup="2">
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::Label" x="0" y="0" w="-1" h="-1" measuredW="59" measuredH="21" zOrder="0" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <text>Drill%20Down</text>
+                      </controlProperties>
+                    </control>
+                    <control controlID="1" controlTypeID="com.balsamiq.mockups::Canvas" x="5" y="21" w="224" h="388" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <verticalScrollbar>true</verticalScrollbar>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+                <control controlID="1" controlTypeID="__group__" x="5" y="49" w="200" h="99" measuredW="200" measuredH="99" zOrder="1" locked="false" isInGroup="2">
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="200" h="99" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="1">
+                      <controlProperties>
+                        <text>Gold</text>
+                      </controlProperties>
+                    </control>
+                    <control controlID="1" controlTypeID="com.balsamiq.mockups::CheckBoxGroup" x="11" y="21" w="-1" h="-1" measuredW="178" measuredH="63" zOrder="1" locked="false" isInGroup="1">
+                      <controlProperties>
+                        <text>%5Bx%5D%20section%20per%20color%20pair%0A%5Bx%5D%20section%20per%20shard/wedge%0A%5B%20%5D%20section%20per%204%20color%20group</text>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+                <control controlID="2" controlTypeID="__group__" x="6" y="157" w="200" h="70" measuredW="200" measuredH="70" zOrder="2" locked="false" isInGroup="2">
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="200" h="70" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="2">
+                      <controlProperties>
+                        <text>Top%20Level</text>
+                      </controlProperties>
+                    </control>
+                    <control controlID="1" controlTypeID="com.balsamiq.mockups::CheckBoxGroup" x="12" y="19" w="175" h="36" measuredW="153" measuredH="35" zOrder="1" locked="false" isInGroup="2">
+                      <controlProperties>
+                        <hrefs>empty_bottle-no_separate_land%26bm%3Bempty_bottle-no_separate_land.bmml%26bm%3Bempty_bottle-no_separate_land.bmml%26bm%3Bempty_bottle-no_separate_land.bmml</hrefs>
+                        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2232%2C312%2C207%2C347%22%20href%3D%22empty_bottle-no_separate_land.bmml%22%20alt%3D%22empty_bottle-no_separate_land%22%20id%3D%221_0%22/%3E%0A</map>
+                        <text>%5Bx%5D%20Land%20is%20different%20than%5Cr%20Colorless</text>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="2" controlTypeID="__group__" x="263" y="12" w="686" h="533" measuredW="686" measuredH="533" zOrder="2" locked="false" isInGroup="48">
+          <controlProperties>
+            <controlName>Card%20Area</controlName>
+          </controlProperties>
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="39" w="686" h="494" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="2"/>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="0" y="3" w="-1" h="-1" measuredW="100" measuredH="21" zOrder="1" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Organized%20Cards</text>
+              </controlProperties>
+            </control>
+            <control controlID="2" controlTypeID="com.balsamiq.mockups::TabBar" x="0" y="64" w="686" h="469" measuredW="594" measuredH="100" zOrder="2" locked="false" isInGroup="2">
+              <controlProperties>
+                <selectedIndex>0</selectedIndex>
+                <text>White%20%280%29%2C%20Blue%20%280%29%2C%20Black%20%280%29%2C%20Red%20%280%29%2C%20Green%20%280%29%2C%20Multicolor%20%280%29%2C%20Colorless%20%280%29%2C%20Land%20%280%29</text>
+                <verticalScrollbar>true</verticalScrollbar>
+              </controlProperties>
+            </control>
+            <control controlID="4" controlTypeID="com.balsamiq.mockups::Button" x="625" y="0" w="-1" h="-1" measuredW="61" measuredH="27" zOrder="3" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Export</text>
+              </controlProperties>
+            </control>
+            <control controlID="5" controlTypeID="com.balsamiq.mockups::Button" x="549" y="0" w="-1" h="-1" measuredW="61" measuredH="27" zOrder="4" locked="false" isInGroup="2">
+              <controlProperties>
+                <text>Import</text>
+              </controlProperties>
+            </control>
+            <control controlID="9" controlTypeID="__group__" x="15" y="105" w="640" h="202" measuredW="640" measuredH="202" zOrder="5" locked="false" isInGroup="2">
+              <controlProperties>
+                <controlName>Card%20Tables</controlName>
+              </controlProperties>
+              <groupChildrenDescriptors>
+                <control controlID="1" controlTypeID="__group__" x="0" y="86" w="640" h="71" measuredW="640" measuredH="71" zOrder="0" locked="false" isInGroup="9">
+                  <controlProperties>
+                    <controlName>Non-Creature%20Table</controlName>
+                  </controlProperties>
+                  <groupChildrenDescriptors>
+                    <control controlID="2" controlTypeID="__group__" x="0" y="0" w="640" h="71" measuredW="640" measuredH="71" zOrder="0" locked="false" isInGroup="1">
+                      <groupChildrenDescriptors>
+                        <control controlID="0" controlTypeID="com.balsamiq.mockups::DataGrid" x="0" y="20" w="640" h="51" measuredW="183" measuredH="23" zOrder="0" locked="false" isInGroup="2">
+                          <controlProperties>
+                            <hLines>true</hLines>
+                            <text>1%2C%202%2C%203%2C%204%2C%205%2C%206%2C%207+%0A%7B15%2C14%2C14%2C14%2C14%2C14%2C15%7D</text>
+                            <vLines>true</vLines>
+                          </controlProperties>
+                        </control>
+                        <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="2" y="0" w="-1" h="-1" measuredW="85" measuredH="21" zOrder="1" locked="false" isInGroup="2">
+                          <controlProperties>
+                            <text>Non-Creature</text>
+                          </controlProperties>
+                        </control>
+                      </groupChildrenDescriptors>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+                <control controlID="10" controlTypeID="__group__" x="0" y="0" w="640" h="202" measuredW="640" measuredH="202" zOrder="1" locked="false" isInGroup="9">
+                  <controlProperties>
+                    <controlName>Creature%20Table%20with%20Input</controlName>
+                  </controlProperties>
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::DataGrid" x="0" y="20" w="640" h="51" measuredW="185" measuredH="53" zOrder="0" locked="false" isInGroup="10">
+                      <controlProperties>
+                        <hLines>true</hLines>
+                        <text>1%2C%202%2C%203%2C%204%2C%205%2C%206%2C%207+%0AD%2C%2C%2C%2C%2C%2C%0A%7B15%2C14%2C14%2C14%2C14%2C14%2C15%7D</text>
+                        <vLines>true</vLines>
+                      </controlProperties>
+                    </control>
+                    <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="2" y="0" w="-1" h="-1" measuredW="58" measuredH="21" zOrder="1" locked="false" isInGroup="10">
+                      <controlProperties>
+                        <text>Creature</text>
+                      </controlProperties>
+                    </control>
+                    <control controlID="2" controlTypeID="__group__" x="0" y="67" w="204" h="135" measuredW="204" measuredH="135" zOrder="2" locked="false" isInGroup="10">
+                      <groupChildrenDescriptors>
+                        <control controlID="1" controlTypeID="com.balsamiq.mockups::List" x="0" y="0" w="204" h="135" measuredW="100" measuredH="128" zOrder="0" locked="false" isInGroup="2">
+                          <controlProperties>
+                            <hrefs>%2Cselected%20militant%26bm%3Bselected%20militant.bmml%26bm%3Bselected%20militant.bmml%26bm%3Bselected%20militant.bmml%2C%2C%2C%2C</hrefs>
+                            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22278%2C207%2C482%2C228%22%20href%3D%22selected%2520militant.bmml%22%20alt%3D%22selected%20militant%22%20id%3D%221_0%22/%3E%0A</map>
+                            <text>Doomed%20Traveler%20%7BW%7D%20-%201/1%0ADryad%20Militant%20%7BG/W%7D%20-%202/1%0ADuergar%20Assailant%20%7BR/W%7D%20-%201/1%0ADutiful%20Thrull%20%7BW%7D%20-%201/1%0AEager%20Cadet%20%7BW%7D%20-%201/1%0AElite%20Vanguard%20%7BW%7D%20-%202/1</text>
+                            <value>32</value>
+                            <verticalScrollbar>true</verticalScrollbar>
+                          </controlProperties>
+                        </control>
+                      </groupChildrenDescriptors>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>
