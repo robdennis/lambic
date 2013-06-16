@@ -1,0 +1,87 @@
+
+#content {
+    /*background-color: rgba(0, 0, 0, 0.28);*/
+    min-height: 100%;
+    height: 100%;
+    /*margin: 0;*/
+    /*padding: 0;*/
+    overflow: hidden;
+}
+
+#sidebar {
+    /*background-color: rgba(0, 0, 0, 0.65);*/
+    min-height: 100%;
+    height: 100%;
+    /*margin: 0;*/
+    /*padding: 0;*/
+}
+
+#hierarchy {
+    background-color: rgba(226, 134, 113, 0.84);
+}
+
+#sidebar-top {
+    height: 20%;
+}
+
+#sidebar-main {
+    height: 80%;
+}
+
+#drill {
+    background-color: rgba(162, 230, 169, 0.34);
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+#lambic {
+    width: 100%;
+}
+
+.container,
+.row {
+    height: inherit;
+}
+
+#sidebar {
+    height: 100%;
+    min-height: 100%;
+}
+
+#content .content-header {
+    height: 10%;
+}
+
+#content .content-viewport {
+    height: 90%;
+}
+
+#content .content-viewport > div{
+    border-style: solid;
+    border-width: 1px;
+    height: 100%;
+}
+
+/*div.layout-container {*/
+    /*width: 100%;*/
+    /*min-width: 100%;*/
+/*}*/
+
+table.card-layout {
+    width: 100%;
+    min-width: 100%;
+    background: #fff;
+    border: 1px solid #dce1e9;
+    border-bottom: 0;
+    border-spacing: 0;
+
+}
+
+table.card-layout th,
+table.card-layout td {
+    border: 1px solid #aaaeb4;
+}
