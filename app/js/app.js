@@ -6,5 +6,6 @@ angular.module('lambic', [
     'lambic.filters',
     'lambic.services',
     'lambic.directives',
-    'lambic.controllers'
+    'lambic.controllers',
+    'ui.bootstrap'
 ]);
