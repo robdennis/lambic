@@ -1,15 +1,7 @@
-<div id="content" class="span8 well well-large">
-    <div class="row content-header">
-        <div class="span1">
-            <label>Organized Cards</label>
-        </div>
-        <div class="span2 offset5">
-            <button id="importBtn" class="btn">Import</button>
-            <button id="exportBtn"  class="btn">Export</button>
-        </div>
-    </div>
+<div id="content" class="span10 well well-large">
+    <header></header>
     <div class="row content-viewport">
-        <div class=span8>
+        <div class=span10>
             <tabs>
                 <pane ng-repeat="pane in panes"
                       heading="{{pane.name}}" active="pane.active">

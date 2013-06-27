@@ -1,0 +1,16 @@
+<div class="content-header">
+    <div class="row">
+        <div class="span2">
+            <button class="btn" ng-click="showQuickAdd = !showQuickAdd">Quick Add</button>
+        </div>
+        <div class="span2 offset6">
+            <button id="importBtn" class="btn pull-right" ng-click="importDialog()">Import</button>
+            <button id="exportBtn"  class="btn pull-right" ng-click="exportDialog()">Export</button>
+        </div>
+    </div>
+    <div class="row" collapse="!showQuickAdd">
+        <div class="well well-large quickAdd span10">
+            <label>Quick Add</label>
+        </div>
+    </div>
+</div>
