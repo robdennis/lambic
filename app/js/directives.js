@@ -11,6 +11,13 @@ angular.module('lambic.directives', []).
            }
        }
     }).
+    directive('header', function() {
+       return {
+           restrict: 'E',
+           replace: true,
+           templateUrl: 'partials/header.html'
+       }
+    }).
     directive('sidebar', function() {
        return {
            restrict: 'E',
