@@ -9,7 +9,7 @@ function AppCtrl($scope,
                  PoolService) {
     $scope.pool = PoolService.get();
     $scope.panes = [
-        {name: 'White'},
+        {name: 'White', active: true},
         {name: 'Blue'},
         {name: 'Black'},
         {name: 'Red'},
@@ -17,6 +17,16 @@ function AppCtrl($scope,
         {name: 'Colorless'},
         {name: 'Multicolor'},
         {name: 'Land'}
+    ];
+
+    $scope.standardGrid = [
+        {header: '1-', data: [undefined]},
+        {header: '2', data: [undefined]},
+        {header: '3', data: [undefined]},
+        {header: '4', data: [undefined]},
+        {header: '5', data: [undefined]},
+        {header: '6', data: [undefined]},
+        {header: '7+', data: [undefined]}
     ];
 
     $scope.opts = {

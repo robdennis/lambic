@@ -36,30 +36,35 @@ angular.module('lambic.directives', []).
             restrict: 'E',
             scope: {
                 data: '=',
-                displayTemplate: '='
+                displayTemplate: '=',
+                additionalClasses: '='
             },
 
             link: function(scope, element, attrs, diffCtrl) {
                 var headerRow = [], items = [];
-                angular.forEach(scope.data, function(value, key) {
-                    headerRow.push(key);
-                    items.push(value);
+                angular.forEach(scope.data, function(value, idx) {
+                    headerRow.push(value.header);
+                    items.push(value.data || []);
                 });
 
                 scope.headerRow = headerRow;
                 scope.zipped = ZipService.longest.apply(this, items);
-                scope.displayTemplate = scope.displayTemplate || 'item';
+                scope.template = scope.displayTemplate || 'item';
+                scope.classes = (scope.additionalClasses || []);
+                scope.classes.push('smart-table-cell');
 
                 var template = '' +
-                    '<table class="smart-table">' +
-                    '   <tr>' +
-                    '       <th ng-repeat="title in headerRow" class="smart-table-cell smart-table-header">' +
-                    '           {{ title }}' +
-                    '       </th>' +
-                    '   </tr>' +
-                    '   <tr ng-repeat="row in zipped">' +
-                    '       <td ng-repeat="item in row" class="smart-table-cell">{{ '+scope.displayTemplate+' }}</td>' +
-                    '   </tr>' +
+                    '<table class="smart-table card-layout">' +
+                        '<tr>' +
+                            '<th ng-repeat="title in headerRow" class="smart-table-cell smart-table-header">' +
+                                '{{ title }}' +
+                            '</th>' +
+                        '</tr>' +
+                        '<tr ng-repeat="row in zipped">' +
+                            '<td ng-repeat="item in row" class="'+scope.classes.join(' ')+'">' +
+                                '{{ '+scope.template+' || "&nbsp;"}}' +
+                            '</td>' +
+                        '</tr>' +
                     '</table>';
 
                 var newElement = angular.element(template);

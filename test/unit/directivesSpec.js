@@ -10,6 +10,8 @@ describe('directives', function() {
                 this.message = function() {
                     return "Expected '" + angular.mock.dump(this.actual) + "' to have class '" + cls + "'.";
                 };
+
+                return angular.element(this.actual).hasClass(cls)
             }
         });
     });
@@ -17,6 +19,7 @@ describe('directives', function() {
 
     describe('smart-table', function() {
         var elm, compile, scope;
+        var nbspChar = String.fromCharCode(160); //the &nbsp; character
         beforeEach(function() {
             this.addMatchers({
                 toMatchDimension: function(length, height) {
@@ -47,6 +50,7 @@ describe('directives', function() {
                     };
                     return actualRows === height && actualWidths[0] === length;
                 },
+
                 toHaveText: function(expectedValuesByRowThenCell, template) {
                     // this is going to assume that the dimensions match up with expectations
                     var table = getCompiledSmartTable(this.actual, template);
@@ -60,9 +64,9 @@ describe('directives', function() {
                             var expectedCell = expectedValuesByRowThenCell[i-1][j];
                             if ( actualCell !== expectedCell) {
                                 this.message = function() {
-                                    return ("mismatched values at row "+(i-1)+" and column "+j+". " +
-                                        actualCell + " != " +
-                                        expectedCell + ".");
+                                    return ("mismatched values at row "+(i-1)+" and column "+j+". '" +
+                                        angular.mock.dump(actualCell) + "' != '" +
+                                        angular.mock.dump(expectedCell) + "'.");
                                 };
 
                                 return false;
@@ -80,70 +84,136 @@ describe('directives', function() {
             compile = $compile;
         }));
 
-        var getCompiledSmartTable = function(data, template) {
+        var getCompiledSmartTable = function(data, template, classes) {
+            var templateParam = template ? ' display-template="template"' : '';
+            var classParam = classes ? ' additional-classes="classes"' : '';
             elm = angular.element(
                 // wrapping with div is needed if you're compiling in a link function apparently
                 '<div>' +
-                '   <smart-table data="subLists" display-template="template"></smart-table>' +
+                    // only have the template passed to the smart table if it's used
+                    '<smart-table data="subLists"'+ templateParam + classParam +'></smart-table>' +
                 '</div>'
             );
             scope.subLists = data;
             scope.template = template;
+            scope.classes = classes;
             compile(elm)(scope);
             // don't know if this is actually necessary?
             scope.$digest();
             return elm;
         };
 
-        var twoColumnSameRows = {
-            stuff: ['foo', 'bar', 'baz'],
-            stuff2: ['foo', 'bar', 'baz']
-        };
+        var sameRows = [
+            {
+                header: 'stuff',
+                data: [
+                    'foo',
+                    'bar',
+                    'baz'
+                ]
+            }, {
+                header: 'stuff2',
+                data: [
+                    'foo',
+                    'bar',
+                    'baz'
+                ]
+            }
+        ];
 
-        var twoColumnDifferentRows = {
-            stuff: ['foo', 'bar', 'baz'],
-            stuff2: ['foo', 'bar', 'baz', 'bax']
-        };
+        var sameRowsObjects = [
+            {
+                header: 'stuff',
+                data: [
+                    {name: 'foo'},
+                    {name: 'bar'},
+                    {name: 'baz'}
+                ]
+            }, {
+                header: 'stuff2',
+                data: [
+                    {name: 'foo'},
+                    {name: 'bar'},
+                    {name: 'baz'}
+                ]
+            }
+        ];
+
+        var differentRows = [
+            {
+                header: 'stuff',
+                data: [
+                    'foo',
+                    'bar',
+                    'baz',
+                    'bax'
+                ]
+            }, {
+                header: 'stuff2',
+                data: [
+                    'foo',
+                    'bar',
+                    'baz'
+                ]
+            }
+        ];
+
+        var differentRowsObjects = [
+            {
+                header: 'stuff',
+                data: [
+                    {name: 'foo'},
+                    {name: 'bar'},
+                    {name: 'baz'},
+                    {name: 'bax'}
+                ]
+            }, {
+                header: 'stuff2',
+                data: [
+                    {name: 'foo'},
+                    {name: 'bar'},
+                    {name: 'baz'}
+                ]
+            }
+        ];
 
         it('can make a 1-column table', function() {
-            expect({
-                stuff: ['foo', 'bar', 'baz']
-            }).toMatchDimension(1, 4); // 3 rows plus a header row
+            expect([sameRows[0]]).toMatchDimension(1, 4); // 3 rows plus a header row
         });
 
         it('can make a 2-column table with same lengths', function() {
-            expect(twoColumnSameRows).toMatchDimension(2, 4);
+            expect(sameRows).toMatchDimension(2, 4);
         });
 
         it('can make a 2-column table with different lengths', function() {
-            expect(twoColumnDifferentRows).toMatchDimension(2, 5);
+            expect(differentRows).toMatchDimension(2, 5);
         });
 
         it('defaults to showing the original value', function() {
-            expect(twoColumnSameRows).toHaveText([
+            expect(sameRows).toHaveText([
                 ['foo', 'foo'],
                 ['bar', 'bar'],
                 ['baz', 'baz']
             ]);
 
-            expect(twoColumnDifferentRows).toHaveText([
+            expect(differentRows).toHaveText([
                 ['foo', 'foo'],
                 ['bar', 'bar'],
                 ['baz', 'baz'],
-                ['', 'bax']
+                ['bax', nbspChar]
             ]);
         });
 
         it('can accept a template "unknown" scope variable', function() {
-            expect(twoColumnSameRows).toHaveText([
-                ['', ''],
-                ['', ''],
-                ['', '']
+            expect(sameRows).toHaveText([
+                [nbspChar, nbspChar],
+                [nbspChar, nbspChar],
+                [nbspChar, nbspChar]
             ], 'unknown');
         });
 
         it("can accept a template that's just a the value", function() {
-            expect(twoColumnSameRows).toHaveText([
+            expect(sameRows).toHaveText([
                 ['foo', 'foo'],
                 ['bar', 'bar'],
                 ['baz', 'baz']
@@ -151,80 +221,59 @@ describe('directives', function() {
         });
 
         it("can accept a template that's an attribute access", function() {
-            expect({
-                stuff: [
-                    {name: 'foo'}, 
-                    {name: 'bar'}, 
-                    {name: 'baz'}
-                ],
-                stuff2: [
-                    {name: 'foo'}, 
-                    {name: 'bar'}, 
-                    {name: 'baz'}
-                ]                
-            }).toHaveText([
+            expect(sameRowsObjects).toHaveText([
                 ['foo', 'foo'],
                 ['bar', 'bar'],
                 ['baz', 'baz']
             ], 'item.name');
 
-            expect({
-                stuff: [
-                    {name: 'foo'},
-                    {name: 'bar'},
-                    {name: 'baz'},
-                    {name: 'bax'}
-                ],
-                stuff2: [
-                    {name: 'foo'},
-                    {name: 'bar'},
-                    {name: 'baz'}
-                ]
-            }).toHaveText([
+            expect(differentRowsObjects).toHaveText([
                     ['foo', 'foo'],
                     ['bar', 'bar'],
                     ['baz', 'baz'],
-                    ['bax', '']
+                    ['bax', nbspChar]
                 ], 'item.name');
 
         });
 
         it("can accept a template that's an unknown attribute access", function() {
-            expect({
-                stuff: [
-                    {name: 'foo'},
-                    {name: 'bar'},
-                    {name: 'baz'}
-                ],
-                stuff2: [
-                    {name: 'foo'},
-                    {name: 'bar'},
-                    {name: 'baz'}
-                ]
-            }).toHaveText([
-                    ['', ''],
-                    ['', ''],
-                    ['', '']
+            expect(sameRowsObjects).toHaveText([
+                    [nbspChar, nbspChar],
+                    [nbspChar, nbspChar],
+                    [nbspChar, nbspChar]
                 ], 'item.unknown');
 
-            expect({
-                stuff: [
-                    {name: 'foo'},
-                    {name: 'bar'},
-                    {name: 'baz'},
-                    {name: 'bax'}
-                ],
-                stuff2: [
-                    {name: 'foo'},
-                    {name: 'bar'},
-                    {name: 'baz'}
-                ]
-            }).toHaveText([
-                    ['', ''],
-                    ['', ''],
-                    ['', ''],
-                    ['', '']
+            expect(differentRowsObjects).toHaveText([
+                    [nbspChar, nbspChar],
+                    [nbspChar, nbspChar],
+                    [nbspChar, nbspChar],
+                    [nbspChar, nbspChar]
                 ], 'item.unknown');
+        });
+
+        it('preserves the order of the object', function() {
+
+        });
+
+        it('can set custom classes', function() {
+            var table = getCompiledSmartTable(
+                [sameRowsObjects[0]], undefined, ['{{ item.name }}']
+            );
+
+            var cells = table.find('td');
+            expect(cells[0]).toHaveClass('smart-table-cell');
+            expect(cells[0]).not.toHaveClass('unknown');
+            expect(cells[0]).toHaveClass('foo');
+            expect(cells[0]).not.toHaveClass('bar');
+            expect(cells[0]).not.toHaveClass('baz');
+            expect(cells[1]).toHaveClass('smart-table-cell');
+            expect(cells[1]).toHaveClass('bar');
+            expect(cells[1]).not.toHaveClass('foo');
+            expect(cells[1]).not.toHaveClass('baz');
+            expect(cells[2]).toHaveClass('smart-table-cell');
+            expect(cells[2]).toHaveClass('baz');
+            expect(cells[2]).not.toHaveClass('foo');
+            expect(cells[2]).not.toHaveClass('bar');
         });
 
     })

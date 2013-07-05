@@ -78,7 +78,7 @@ table.card-layout {
     border: 1px solid #dce1e9;
     border-bottom: 0;
     border-spacing: 0;
-
+    empty-cells: show;
 }
 
 table.card-layout th,
