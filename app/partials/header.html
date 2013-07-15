@@ -10,7 +10,12 @@
     </div>
     <div class="row" collapse="!showQuickAdd">
         <div class="well well-large quickAdd span10">
-            <label>Quick Add</label>
+            <div class="input-append">
+                <input name="quickadd" ng-model="quickadd" type="text"
+                       typeahead="card.name for card in cards | filter:$viewValue">
+                <button class="btn" type="submit" ng-click="add(quickadd)">Add</button>
+            </div>
+
         </div>
     </div>
 </div>

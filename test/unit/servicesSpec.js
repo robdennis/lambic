@@ -4,6 +4,20 @@
 
 describe('service', function() {
     beforeEach(module('lambic.services'));
+    describe('PoolService', function() {
+        var poolService, cacheService;
+        beforeEach(inject(function(PoolService, CardCacheService) {
+            poolService = PoolService;
+            cacheService = CardCacheService;
+            spyOn(CardCacheService, 'get')
+        }));
+
+        it('adding a name puts it in the cache', function() {
+            poolService.add('Terror');
+            expect(cacheService.get).toHaveBeenCalled()
+        });
+    });
+
     describe('ZipService', function() {
         var zipService;
         beforeEach(inject(function(ZipService) {
@@ -23,4 +37,16 @@ describe('service', function() {
         });
     });
 
+    describe('CardCacheService', function() {
+        var cacheService;
+        beforeEach(inject(function(CardCacheService) {
+            cacheService = CardCacheService;
+        }));
+
+        it("should note which cards are missing", function() {
+            expect(cacheService.missingNames(['unknown', 'not yet known'])).toEqual(['unknown', 'not yet known']);
+            cacheService.set('not yet known', {});
+            expect(cacheService.missingNames(['unknown', 'not yet known'])).toEqual(['unknown']);
+        });
+    });
 });

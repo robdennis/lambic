@@ -6,8 +6,12 @@ angular.module('lambic.controllers', []);
 
 function AppCtrl($scope,
                  $dialog,
-                 PoolService) {
+                 PoolService,
+                 CardCacheService) {
+    CardCacheService.setMany(mtgo_cube_og_data);
+    $scope.cards = CardCacheService.getCachedCards();
     $scope.pool = PoolService.get();
+
     $scope.panes = [
         {name: 'White', active: true},
         {name: 'Blue'},

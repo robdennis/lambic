@@ -6,16 +6,21 @@ angular.module('lambic.directives', []).
            restrict: 'E',
            replace: true,
            templateUrl: 'partials/main.html',
-           controller: function($scope, PoolService) {
-
-           }
        }
     }).
     directive('header', function() {
        return {
            restrict: 'E',
            replace: true,
-           templateUrl: 'partials/header.html'
+           templateUrl: 'partials/header.html',
+           controller: function($scope, PoolService, CardCacheService) {
+
+               $scope.add = function(name) {
+                   console.log('adding', name);
+                   PoolService.add(name);
+                   console.log(PoolService.get())
+               }
+           }
        }
     }).
     directive('sidebar', function() {
