@@ -12,7 +12,7 @@
         <div class="well well-large quickAdd span10">
             <div class="input-append">
                 <input name="quickadd" ng-model="quickadd" type="text"
-                       typeahead="card.name for card in cards | filter:$viewValue">
+                       typeahead="card.name for card in cards | filter:{name: $viewValue} | limitTo:2">
                 <button class="btn" type="submit" ng-click="add(quickadd)">Add</button>
             </div>
 

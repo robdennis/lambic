@@ -4,7 +4,7 @@
         <div class=span10>
             <tabs>
                 <pane ng-repeat="pane in panes"
-                      heading="{{pane.name}}" active="pane.active">
+                      heading="{{pane.name}} ({{pane.count || 0}})" active="pane.active">
                     <card-grid></card-grid>
                 </pane>
             </tabs>
