@@ -8,7 +8,7 @@ function AppCtrl($scope,
                  $dialog,
                  PoolService,
                  CardCacheService) {
-    CardCacheService.setMany(mtgo_cube_og_data);
+    CardCacheService.setMany(all_cards);
     $scope.cards = CardCacheService.getCachedCards();
     $scope.pool = PoolService.get();
 

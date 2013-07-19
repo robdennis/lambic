@@ -78,8 +78,8 @@ angular.module('lambic.services', [])
             },
             setMany: function(cardHash) {
                 var self = this;
-                angular.forEach(cardHash, function(card, name) {
-                    self.set(name, card)
+                angular.forEach(cardHash, function(card) {
+                    self.set(card.name, card)
                 });
             }
         };

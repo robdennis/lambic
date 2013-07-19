@@ -13,7 +13,7 @@ angular.module('lambic.directives', []).
            restrict: 'E',
            replace: true,
            templateUrl: 'partials/header.html',
-           controller: function($scope, PoolService, CardCacheService) {
+           controller: function($scope, PoolService) {
 
                $scope.add = function(name) {
                    console.log('adding', name);
