@@ -8,37 +8,17 @@ function AppCtrl($scope,
                  $dialog,
                  PoolService,
                  CardCacheService) {
-    CardCacheService.setMany(all_cards);
-    $scope.cards = CardCacheService.getCachedCards();
-    $scope.pool = PoolService.get();
 
-    $scope.panes = [
-        {name: 'White', active: true},
-        {name: 'Blue'},
-        {name: 'Black'},
-        {name: 'Red'},
-        {name: 'Green'},
-        {name: 'Colorless'},
-        {name: 'Multicolor'},
-        {name: 'Land'}
-    ];
+    PoolService.subscribe(function(pool) {
+        console.log('my callback is firing! ', pool.count());
+        $scope.pool = pool;
+    });
 
-    $scope.standardGrid = [
-        {header: '1-', data: [undefined]},
-        {header: '2', data: [undefined]},
-        {header: '3', data: [undefined]},
-        {header: '4', data: [undefined]},
-        {header: '5', data: [undefined]},
-        {header: '6', data: [undefined]},
-        {header: '7+', data: [undefined]}
-    ];
-
-    $scope.opts = {
-        backdrop: true,
-        keyboard: true,
-        backdropClick: true,
-        controller: 'AppCtrl'
-    };
+    console.log('inserting a local gatherer dump');
+    $scope.cards = CardCacheService.insert(all_cards);
+    CardCacheService.get_card('Doomed Traveler', function(card) {
+        console.log(card);
+    });
 
     $scope.importDialog = function() {
         openDialog('<label>import dialog</label>')
