@@ -87,9 +87,7 @@ angular.module('lambic.directives', []).
                 "<div>" +
                     "<tabs>" +
                         '<pane ng-repeat="pane in panes" heading="{{pane.name}} ({{pane.total.count()}})" active="pane.active">' +
-                            '<div>{{ pane.data }}</div>' +
-                            '<div>{{ pane.total.get() }}</div>' +
-                            '<smart-table data="pane.data"></smart-table>' +
+                            '<smart-table data="pane.data" display-template="template"></smart-table>' +
                         "</pane>" +
                     "</tabs>" +
                 "</div>",
@@ -108,6 +106,7 @@ angular.module('lambic.directives', []).
                     {name: 'All'}
                 ];
 
+                $scope.template = 'item.name'
 
             },
             link: function(scope, element, attrs) {
@@ -129,34 +128,33 @@ angular.module('lambic.directives', []).
                         pane.data = CubeSortService.sortTable(totalOnPane.get(), spec);
                     });
                 })
-
-
-
             }
         }
     })
     .directive('smartTable', function ($compile, ZipService) {
         return {
             restrict: 'E',
-            replace: true,
             scope: {
-                data: '&',
-                displayTemplate: '&',
-                additionalClasses: '&'
+                data: '=',
+                displayTemplate: '=',
+                additionalClasses: '='
             },
 
             link: function(scope, element) {
                 console.log('rendering a smart table');
-                var headerRow = [], items = [];
-                angular.forEach(scope.data(), function(value, idx) {
-                    headerRow.push(value.header);
-                    items.push(value.data || []);
+
+                scope.$watch('data', function() {
+                    var items = [];
+                    scope.headerRow = [];
+                    angular.forEach(scope.data, function(value, idx) {
+                        scope.headerRow.push(value.header);
+                        items.push(value.data || []);
+                    });
+
+                    scope.zipped = ZipService.longest.apply(this, items);
                 });
 
-                scope.headerRow = headerRow;
-                scope.zipped = ZipService.longest.apply(this, items);
-
-                var classes = (scope.additionalClasses() || []);
+                var classes = (scope.additionalClasses || []);
                 classes.push('smart-table-cell');
 
                 var template = '' +
@@ -168,7 +166,7 @@ angular.module('lambic.directives', []).
                         '</tr>' +
                         '<tr ng-repeat="row in zipped">' +
                             '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
-                                '{{ '+ (scope.displayTemplate() || 'item') +' || "&nbsp;"}}' +
+                                '{{ '+ (scope.displayTemplate || 'item') +' || "&nbsp;"}}' +
                             '</td>' +
                         '</tr>' +
                     '</table>';
