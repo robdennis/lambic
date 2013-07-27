@@ -5,7 +5,15 @@ angular.module('lambic.directives', []).
        return {
            restrict: 'E',
            replace: true,
-           templateUrl: 'partials/main.html',
+           template: ''+
+               '<div id="content" class="span10 well well-large">' +
+                   '<header></header>' +
+                   '<div class="row content-viewport">' +
+                       '<div class=span10>' +
+                           '<paned-pool-view></paned-pool-view>' +
+                       '</div>' +
+                   '</div>' +
+               '</div>'
        }
     }).
     directive('header', function() {
@@ -13,12 +21,10 @@ angular.module('lambic.directives', []).
            restrict: 'E',
            replace: true,
            templateUrl: 'partials/header.html',
-           controller: function($scope, PoolService) {
-
+           controller: function($scope, PoolService, CardCacheService) {
+               console.log($scope.cards.count() + ' cards in the database');
                $scope.add = function(name) {
-                   console.log('adding', name);
                    PoolService.add(name);
-                   console.log(PoolService.get())
                }
            }
        }
@@ -30,13 +36,102 @@ angular.module('lambic.directives', []).
            templateUrl: 'partials/sidebar.html'
        }
     }).
-    directive('cardGrid', function() {
+    directive('cardGrid', function(CubeSortService, $compile) {
        return {
+           scope: {
+               data: '='
+           },
            restrict: 'E',
            replace: true,
-           templateUrl: 'partials/grid.html'
+           controller: function($scope) {
+                $scope.spec = {
+                    'cmc<=1': {},
+                    'cmc==2': {},
+                    'cmc==3': {},
+                    'cmc==4': {},
+                    'cmc==5': {},
+                    'cmc==6': {},
+                    'cmc>=7': {}
+                };
+           },
+
+           link: function(scope, element) {
+
+               var template = '' +
+                   '<div>' +
+                   '<div class="row layout-container">' +
+                   '<div class="span10">' +
+//                       '<label>Creatures</label>' +
+                   '<smart-table data="table"></smart-table>' +
+                   '</div>' +
+                   '</div>' +
+//                   '<div class="row">' +
+//                   '<div class="span10">' +
+//                       '<label>Non-Creatures</label>' +
+//                       '<smart-table data="standardGrid"></smart-table>' +
+//                       '</div>' +
+//                   '</div>' +
+                   '</div>';
+               var newElement = angular.element(template);
+               scope.table = CubeSortService.sortTable(scope.data, scope.spec);
+               $compile(newElement)(scope);
+               element.replaceWith(newElement);
+           }
        }
-    }).directive('smartTable', function ($compile, ZipService) {
+    }).
+    directive('panedPoolView', function(PoolService, CubeSortService) {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: "" +
+                "<div>" +
+                    "<tabs>" +
+                        '<pane ng-repeat="pane in panes" heading="{{pane.name}} ({{pane.total.count()}})" active="pane.active">' +
+                            '<smart-table data="pane.data" display-template="template"></smart-table>' +
+                        "</pane>" +
+                    "</tabs>" +
+                "</div>",
+            
+            controller: function($scope, PoolService, CubeSortService) {
+
+                $scope.panes = [
+                    {name: 'White', active: true},
+                    {name: 'Blue'},
+                    {name: 'Black'},
+                    {name: 'Red'},
+                    {name: 'Green'},
+                    {name: 'Colorless'},
+//                    {name: 'Multicolor', custom: true},
+//                    {name: 'Land', custom: true},
+                    {name: 'All'}
+                ];
+
+                $scope.template = 'item.name'
+
+            },
+            link: function(scope, element, attrs) {
+                var spec = {
+                    'cmc<=1': {},
+                    'cmc==2': {},
+                    'cmc==3': {},
+                    'cmc==4': {},
+                    'cmc==5': {},
+                    'cmc==6': {},
+                    'cmc>=7': {}
+                };
+
+                scope.$watch('pool', function(newPool) {
+                    console.log('refiring panes');
+                    angular.forEach(scope.panes, function(pane) {
+                        var totalOnPane = PoolService.onPane(pane.name, newPool);
+                        pane.total = totalOnPane;
+                        pane.data = CubeSortService.sortTable(totalOnPane.get(), spec);
+                    });
+                })
+            }
+        }
+    })
+    .directive('smartTable', function ($compile, ZipService) {
         return {
             restrict: 'E',
             scope: {
@@ -45,18 +140,22 @@ angular.module('lambic.directives', []).
                 additionalClasses: '='
             },
 
-            link: function(scope, element, attrs, diffCtrl) {
-                var headerRow = [], items = [];
-                angular.forEach(scope.data, function(value, idx) {
-                    headerRow.push(value.header);
-                    items.push(value.data || []);
+            link: function(scope, element) {
+                console.log('rendering a smart table');
+
+                scope.$watch('data', function() {
+                    var items = [];
+                    scope.headerRow = [];
+                    angular.forEach(scope.data, function(value, idx) {
+                        scope.headerRow.push(value.header);
+                        items.push(value.data || []);
+                    });
+
+                    scope.zipped = ZipService.longest.apply(this, items);
                 });
 
-                scope.headerRow = headerRow;
-                scope.zipped = ZipService.longest.apply(this, items);
-                scope.template = scope.displayTemplate || 'item';
-                scope.classes = (scope.additionalClasses || []);
-                scope.classes.push('smart-table-cell');
+                var classes = (scope.additionalClasses || []);
+                classes.push('smart-table-cell');
 
                 var template = '' +
                     '<table class="smart-table card-layout">' +
@@ -66,8 +165,8 @@ angular.module('lambic.directives', []).
                             '</th>' +
                         '</tr>' +
                         '<tr ng-repeat="row in zipped">' +
-                            '<td ng-repeat="item in row" class="'+scope.classes.join(' ')+'">' +
-                                '{{ '+scope.template+' || "&nbsp;"}}' +
+                            '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
+                                '{{ '+ (scope.displayTemplate || 'item') +' || "&nbsp;"}}' +
                             '</td>' +
                         '</tr>' +
                     '</table>';

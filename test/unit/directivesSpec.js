@@ -20,6 +20,34 @@ describe('directives', function() {
     describe('smart-table', function() {
         var elm, compile, scope;
         var nbspChar = String.fromCharCode(160); //the &nbsp; character
+
+        var tableToHaveText = function(expectedValuesByRowThenCell, table) {
+            table = table || this.actual;
+            var rows = table.find('tr');
+            // for loops so we can return early
+            // don't collect header rows, so start at 1
+            if (rows.length - 1 !== expectedValuesByRowThenCell.length) {
+                return false;
+            }
+            for (var i=1; i<rows.length; i++) {
+                var cells = angular.element(rows[i]).find('td');
+                for (var j=0; j<cells.length; j++) {
+                    var actualCell = angular.element(cells[j]).text();
+                    var expectedCell = expectedValuesByRowThenCell[i-1][j];
+                    if ( actualCell !== expectedCell) {
+                        this.message = function() {
+                            return ("mismatched values at row "+(i-1)+" and column "+j+". '" +
+                                angular.mock.dump(actualCell) + "' != '" +
+                                angular.mock.dump(expectedCell) + "'.");
+                        };
+
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        };
         beforeEach(function() {
             this.addMatchers({
                 toMatchDimension: function(length, height) {
@@ -51,30 +79,13 @@ describe('directives', function() {
                     return actualRows === height && actualWidths[0] === length;
                 },
 
+//                tableToHaveText: tableToHaveText,
+
                 toHaveText: function(expectedValuesByRowThenCell, template) {
                     // this is going to assume that the dimensions match up with expectations
                     var table = getCompiledSmartTable(this.actual, template);
-                    var rows = table.find('tr');
-                    // for loops so we can return early
-                    // don't collect header rows, so start at 1
-                    for (var i=1; i<rows.length; i++) {
-                        var cells = angular.element(rows[i]).find('td');
-                        for (var j=0; j<cells.length; j++) {
-                            var actualCell = angular.element(cells[j]).text();
-                            var expectedCell = expectedValuesByRowThenCell[i-1][j];
-                            if ( actualCell !== expectedCell) {
-                                this.message = function() {
-                                    return ("mismatched values at row "+(i-1)+" and column "+j+". '" +
-                                        angular.mock.dump(actualCell) + "' != '" +
-                                        angular.mock.dump(expectedCell) + "'.");
-                                };
 
-                                return false;
-                            }
-                        }
-                    }
-
-                    return true;
+                    return tableToHaveText(expectedValuesByRowThenCell, table);
                 }
             });
         });
@@ -275,6 +286,36 @@ describe('directives', function() {
             expect(cells[2]).not.toHaveClass('foo');
             expect(cells[2]).not.toHaveClass('bar');
         });
+
+//        it('can update with new information', function() {
+//
+//            elm = angular.element(
+//                // wrapping with div is needed if you're compiling in a link function apparently
+//                '<div>' +
+//                    // only have the template passed to the smart table if it's used
+//                    '<smart-table data="subLists"></smart-table>' +
+//                '</div>'
+//            );
+//            compile(elm)(scope);
+//
+//            scope.subLists = sameRows;
+//            // don't know if this is actually necessary?
+//            scope.$digest();
+//            expect(tableToHaveText([
+//                ['foo', 'foo'],
+//                ['bar', 'bar'],
+//                ['baz', 'baz']
+//            ], elm)).toBeTruthy();
+//
+//            scope.subLists = differentRows;
+//            scope.$digest();
+//            expect(tableToHaveText([
+//                ['foo', 'foo'],
+//                ['bar', 'bar'],
+//                ['baz', 'baz'],
+//                ['bax', nbspChar]
+//            ], elm)).toBeTruthy();
+//        })
 
     })
 });
