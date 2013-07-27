@@ -498,7 +498,7 @@ angular.module('lambic.services', [])
                 if (!tableQuery) {
                     tableData = [];
                 } else {
-                    tableData = tableQuery.get();
+                    tableData = tableQuery;
                     console.log('all the data', tableData);
                 }
 

@@ -87,12 +87,14 @@ angular.module('lambic.directives', []).
                 "<div>" +
                     "<tabs>" +
                         '<pane ng-repeat="pane in panes" heading="{{pane.name}} ({{pane.total.count()}})" active="pane.active">' +
+                            '<div>{{ pane.data }}</div>' +
+                            '<div>{{ pane.total.get() }}</div>' +
                             '<smart-table data="pane.data"></smart-table>' +
                         "</pane>" +
                     "</tabs>" +
                 "</div>",
             
-            controller: function($scope) {
+            controller: function($scope, PoolService, CubeSortService) {
 
                 $scope.panes = [
                     {name: 'White', active: true},
@@ -105,6 +107,8 @@ angular.module('lambic.directives', []).
 //                    {name: 'Land', custom: true},
                     {name: 'All'}
                 ];
+
+
             },
             link: function(scope, element, attrs) {
                 var spec = {
@@ -117,11 +121,16 @@ angular.module('lambic.directives', []).
                     'cmc>=7': {}
                 };
 
-                angular.forEach(scope.panes, function(pane) {
-                    var totalOnPane = PoolService.onPane(pane.name);
-                    pane.total = totalOnPane;
-                    pane.data = CubeSortService.sortTable(totalOnPane, spec);
-                });
+                scope.$watch('pool', function(newPool) {
+                    console.log('refiring panes');
+                    angular.forEach(scope.panes, function(pane) {
+                        var totalOnPane = PoolService.onPane(pane.name, newPool);
+                        pane.total = totalOnPane;
+                        pane.data = CubeSortService.sortTable(totalOnPane.get(), spec);
+                    });
+                })
+
+
 
             }
         }
@@ -146,9 +155,9 @@ angular.module('lambic.directives', []).
 
                 scope.headerRow = headerRow;
                 scope.zipped = ZipService.longest.apply(this, items);
-                scope.template = scope.displayTemplate() || 'item';
-                scope.classes = (scope.additionalClasses() || []);
-                scope.classes.push('smart-table-cell');
+
+                var classes = (scope.additionalClasses() || []);
+                classes.push('smart-table-cell');
 
                 var template = '' +
                     '<table class="smart-table card-layout">' +
@@ -158,8 +167,8 @@ angular.module('lambic.directives', []).
                             '</th>' +
                         '</tr>' +
                         '<tr ng-repeat="row in zipped">' +
-                            '<td ng-repeat="item in row" class="'+scope.classes.join(' ')+'">' +
-                                '{{ '+scope.template+' || "&nbsp;"}}' +
+                            '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
+                                '{{ '+ (scope.displayTemplate() || 'item') +' || "&nbsp;"}}' +
                             '</td>' +
                         '</tr>' +
                     '</table>';
