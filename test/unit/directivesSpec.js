@@ -287,35 +287,35 @@ describe('directives', function() {
             expect(cells[2]).not.toHaveClass('bar');
         });
 
-//        it('can update with new information', function() {
-//
-//            elm = angular.element(
-//                // wrapping with div is needed if you're compiling in a link function apparently
-//                '<div>' +
-//                    // only have the template passed to the smart table if it's used
-//                    '<smart-table data="subLists"></smart-table>' +
-//                '</div>'
-//            );
-//            compile(elm)(scope);
-//
-//            scope.subLists = sameRows;
-//            // don't know if this is actually necessary?
-//            scope.$digest();
-//            expect(tableToHaveText([
-//                ['foo', 'foo'],
-//                ['bar', 'bar'],
-//                ['baz', 'baz']
-//            ], elm)).toBeTruthy();
-//
-//            scope.subLists = differentRows;
-//            scope.$digest();
-//            expect(tableToHaveText([
-//                ['foo', 'foo'],
-//                ['bar', 'bar'],
-//                ['baz', 'baz'],
-//                ['bax', nbspChar]
-//            ], elm)).toBeTruthy();
-//        })
+        it('can update with new information', function() {
+
+            elm = angular.element(
+                // wrapping with div is needed if you're compiling in a link function apparently
+                '<div>' +
+                    // only have the template passed to the smart table if it's used
+                    '<smart-table data="subLists"></smart-table>' +
+                '</div>'
+            );
+            compile(elm)(scope);
+
+            scope.subLists = sameRows;
+            // don't know if this is actually necessary?
+            scope.$digest();
+            expect(tableToHaveText([
+                ['foo', 'foo'],
+                ['bar', 'bar'],
+                ['baz', 'baz']
+            ], elm)).toBeTruthy();
+
+            scope.subLists = differentRows;
+            scope.$digest();
+            expect(tableToHaveText([
+                ['foo', 'foo'],
+                ['bar', 'bar'],
+                ['baz', 'baz'],
+                ['bax', nbspChar]
+            ], elm)).toBeTruthy();
+        })
 
     })
 });
