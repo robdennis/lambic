@@ -1,4 +1,5 @@
 # Lambic
+[![Build Status](https://travis-ci.org/rdennis463/lambic.png)](https://travis-ci.org/rdennis463/lambic)
 
 Construct your deck/sealed pool/cube the way you want
 
