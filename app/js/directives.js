@@ -103,7 +103,7 @@ angular.module('lambic.directives', []).
                     {name: 'Colorless', category: 'Colorless/!Land'},
                     {name: 'Land', category: 'Colorless/Land'},
                     {name: 'Multicolor', category: 'Multicolor'},
-                    {name: 'White-Usable', category: '!Colorless|WhiteCastable'},
+                    {name: 'White-Usable', category: '!Colorless/WhiteCastable'},
                     {name: 'Blue-Usable', category: '!Colorless/BlueCastable'},
                     {name: 'Black-Usable', category: '!Colorless/BlackCastable'},
                     {name: 'Red-Usable', category: '!Colorless/RedCastable'},
