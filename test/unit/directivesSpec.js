@@ -16,7 +16,6 @@ describe('directives', function() {
         });
     });
 
-
     describe('smart-table', function() {
         var elm, compile, scope;
         var nbspChar = String.fromCharCode(160); //the &nbsp; character
@@ -288,7 +287,6 @@ describe('directives', function() {
         });
 
         it('can update with new information', function() {
-
             elm = angular.element(
                 // wrapping with div is needed if you're compiling in a link function apparently
                 '<div>' +

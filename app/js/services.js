@@ -66,7 +66,7 @@ angular.module('lambic.services', [])
 
         return {
             isColorPresent: function(name) {
-                return RegExp(this._nameToAbbrev(name));
+                return new RegExp(this._nameToAbbrev(name), 'i');
             },
             _nameToAbbrev: function(name) {
                 return _color_to_abbrev_mapping[name.toLowerCase()];
@@ -86,18 +86,31 @@ angular.module('lambic.services', [])
                 return '{'+this._nameToAbbrev(color)+'}';
             },
 
-            isMonoColorCastable: function(color) {
+            isCastableBy: function(colors, manaCost) {
+
+
+                return this.isCastableRegExp(colors).exec(manaCost)
+            },
+
+            isCastableRegExp: function(colors) {
+
+                var self = this;
 
                 var clauses = [
                     '('+_colorless+')',
-                    '('+_x+')',
-                    '('+this._mono(color)+')',
-                    '('+this._mono_hybrid(color)+')',
-                    '('+this._phyrexian(color)+')',
-                    '('+this._hybrid_involving(color)+')'
+                    '('+_x+')'
                 ];
 
-                return RegExp('^('+clauses.join('|')+')+$')
+                angular.forEach(colors, function(color) {
+                    clauses = clauses.concat([
+                        '('+self._mono(color)+')',
+                        '('+self._mono_hybrid(color)+')',
+                        '('+self._phyrexian(color)+')',
+                        '('+self._hybrid_involving(color)+')'
+                    ]);
+                });
+
+                return new RegExp('^('+clauses.join('|')+')+$', 'i')
             }
         }
     })
@@ -132,10 +145,11 @@ angular.module('lambic.services', [])
             }
         }
     })
-    .factory('CardCategoryService', function(HeuristicService, 
+    .factory('CardCategoryService', function(HeuristicService,
+                                             ManaCostRegexService,
                                              UtilityService) {
 
-        var multiColorRegex = /(.+?)(?:-|\s)*color/i
+        var multiColorRegex = /(.+?)(?:-|\s)*color/i;
         return {
             isColorCategory: function(category) {
                 return UtilityService.inArray(category, UtilityService.colorList()) !== -1
@@ -181,7 +195,26 @@ angular.module('lambic.services', [])
                     } else {
                         return card['colors'].length == expectedLength;
                     }
+                } else {
+                    return 'na'
                 }
+            },
+
+            _checkForCastability: function(category, card) {
+                if (category.indexOf('Castable') === -1) {
+                    return 'na'
+                }
+                var colorMatch = /(.+)Castable/i.exec(category);
+
+                if (!colorMatch) {
+                    return 'na';
+                }
+
+                var colors = colorMatch[1].split('&');
+                console.log('colors are: ', colors);
+
+                return ManaCostRegexService.isCastableBy(colors, card.mana_cost);
+
             },
 
             _checkForColor: function(category, card) {
@@ -266,13 +299,22 @@ angular.module('lambic.services', [])
                     return 'na'
                 }
             },
-            _checkForAny: function(category, card) {
+            _checkForAny: function(category) {
                 if (category == 'Any') {
                     return true;
                 } else {
                     return 'na'
                 }
             },
+            makeMatcher: function(category) {
+                var self = this;
+                console.log('made a matcher for category ' + category);
+                return function() {
+                    // "this" in this context is the card
+                    return self.matchesCategory(category, this);
+                }
+            },
+
             matchesCategory : function(category, baseCard) {
                 if (baseCard === undefined) {
                     throw "category " + category + ' testing against undefined'
@@ -309,6 +351,7 @@ angular.module('lambic.services', [])
                         var shouldContinueChecking = true;
 
                         angular.forEach([
+                            self._checkForCastability,
                             self._checkForColor,
                             self._checkForType,
                             self._checkForCMC,
@@ -325,11 +368,11 @@ angular.module('lambic.services', [])
 
                             if (result === 'na') {
                                 return result;
-                            } else {
-                                matchesSubgroup = matchesSubgroup || (negateCategory ? !result : result);
-                                // short-circuit here since 1 checker weighed-in
-                                shouldContinueChecking = false;
                             }
+                            matchesSubgroup = matchesSubgroup || (negateCategory ? !result : result);
+                            // "short-circuit" here since 1 checker weighed-in
+                            shouldContinueChecking = false;
+
                         });
                     });
                     // category fails to match if
@@ -341,8 +384,8 @@ angular.module('lambic.services', [])
             }
         }
     })
-    .factory('PoolService', function($rootScope, CardCacheService, ManaCostRegexService) {
-        var pool = TAFFY();
+    .factory('PoolService', function($rootScope, CardCacheService, CardCategoryService) {
+        var pool = new TAFFY();
         var callbacks = [];
 
         return {
@@ -355,34 +398,11 @@ angular.module('lambic.services', [])
                 callbacks.push(callback);
             },
 
-            onPane: function(paneName, querySet) {
-                querySet = querySet || pool();
-                if (paneName == 'Land') {
-                    throw 'not implemented';
-                } else if (paneName == 'All'){
-                    return querySet;
-                }
-
-                return querySet.filter({mana_cost: {regex: ManaCostRegexService.isMonoColorCastable(paneName)}})
-
-            },
-
-            costs: function(cost, querySet) {
+            filterCategory: function(cat, querySet) {
                 querySet = querySet || pool();
 
-                return querySet.filter({converted_mana_cost: parseInt(cost)})
-            },
+                return querySet.filter(CardCategoryService.makeMatcher(cat))
 
-            isCreature: function(cost, querySet) {
-                querySet = querySet || pool();
-
-                return querySet.filter({types: {has: 'Creature'}})
-            },
-
-            isNotCreature: function(cost, querySet) {
-                querySet = querySet || pool();
-
-                return querySet.filter({types: {'!has': 'Creature'}})
             },
 
             addMany: function(names) {
@@ -546,10 +566,6 @@ angular.module('lambic.services', [])
                         } else if (angular.isObject(_subSpec)) {
                             var _specToDescendWith = {};
                             var isLeaf = false;
-                            if (_subSpec['appearance']) {
-                                _specToDescendWith['appearance'] = _subSpec['appearance'];
-                                delete _subSpec['appearance'];
-                            }
 
                             if (UtilityService.isEmptyObject(_subSpec)) {
                                 isLeaf = true;
@@ -599,7 +615,7 @@ angular.module('lambic.services', [])
         }
     })
     .factory('CardCacheService', function($cacheFactory, HeuristicService) {
-        var cache = TAFFY();
+        var cache = new TAFFY();
 
 
         return {

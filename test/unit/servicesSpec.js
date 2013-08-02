@@ -2,7 +2,8 @@
 
 /* jasmine specs for services go here */
 
-var namify = function(cube) {
+
+var namifySortedCube = function(cube) {
     // it's simpler to write tests that just expect names of
     // cards instead of listing all the attributes of that card
     // so dump it out to just the names
@@ -10,7 +11,7 @@ var namify = function(cube) {
 
     if (cube instanceof Array) {
         _recurseNamify = function(subCube) {
-            angular.forEach(subCube, function(categoryObject, _subName) {
+            angular.forEach(subCube, function(categoryObject) {
 
                 if (categoryObject.hasOwnProperty('subcategories')) {
                     _recurseNamify(categoryObject.subcategories);
@@ -21,7 +22,7 @@ var namify = function(cube) {
                         categoryObject.cards[idx] = card['name'];
                     })
                 } else {
-                    throw "unexpected cube format in namify"
+                    throw "unexpected cube format in namifySortedCube"
                 }
             })
         };
@@ -40,9 +41,21 @@ var namify = function(cube) {
     }
 
     _recurseNamify(cube);
-    return cube
+    return cube;
 };
 
+var getValues = function(someArray, key) {
+    var values = [];
+    key = key || 'name';
+    angular.forEach(someArray, function(item) {
+        var toPush = item[key];
+        if (toPush === undefined) {
+            console.log(key + ' not present in ' + item);
+        }
+        values.push(toPush);
+    });
+    return values;
+};
 
 describe('service', function() {
     var cubeContents;
@@ -97,10 +110,10 @@ describe('service', function() {
         beforeEach(function() {
             this.addMatchers({
                 toMatchCount: function(count) {
-                    var paneName = this.actual;
-                    var results = poolService.onPane(paneName).get();
+                    var category = this.actual;
+                    var results = poolService.filterCategory(category).get();
                     this.message = function() {
-                        return 'for '+this.actual+' results: '+angular.mock.dump(results) + ' vs ' + count;
+                        return 'for '+category+' results: '+getValues(results) + ' vs ' + count;
                     };
                     return results.length === count;
                 }
@@ -124,17 +137,32 @@ describe('service', function() {
         });
 
         it('should correctly guess say what is on a pane', function() {
-            poolService.addMany(
-                ['Damnation', 'Divinity of Pride', 'Elite Vanguard', 'Mutavault', 'Mutavault', 'Thran Dynamo', 'Tidehollow Sculler']
+            poolService.addMany([
+                'Damnation',
+                'Divinity of Pride',
+                'Elite Vanguard',
+                'Mutavault',
+                'Mutavault',
+                'Thran Dynamo',
+                'Tidehollow Sculler']
             );
-//            expect('Land').toMatchCount(1);
+            expect('Land').toMatchCount(2);
             expect('White').toMatchCount(3);
             expect('Black').toMatchCount(3);
-//            expect('White/Black').toMatchCount(4);
-//            expect('Black/White').toMatchCount(4);
-//            expect('Colorless').toMatchCount(1);
-//            expect('Multicolor').toMatchCount(1);
-            expect('All').toMatchCount(7)
+            expect('MonoWhite').toMatchCount(1);
+            expect('MonoBlack').toMatchCount(1);
+            expect('WhiteCastable').toMatchCount(3);
+            expect('BlackCastable').toMatchCount(3);
+            expect('Black&WhiteCastable').toMatchCount(5);
+            expect('White&BlackCastable').toMatchCount(5);
+            expect('White|Black').toMatchCount(4);
+            expect('Black|White').toMatchCount(4);
+            expect('White/Black').toMatchCount(2);
+            expect('Black/White').toMatchCount(2);
+            expect('Multicolor').toMatchCount(2);
+            expect('Colorless').toMatchCount(3);
+            expect('Any').toMatchCount(7)
+
         })
     });
 
@@ -164,7 +192,8 @@ describe('service', function() {
         }));
 
         it('should check whether something is castable by a single color of mana', function() {
-            var whiteCouldCast = regexService.isMonoColorCastable('White');
+            var whiteCouldCast = regexService.isCastableRegExp(['White']);
+
             expect('{W}').toMatch(whiteCouldCast);
             expect('{W/2}').toMatch(whiteCouldCast);
             expect('{W/P}').toMatch(whiteCouldCast);
@@ -240,218 +269,195 @@ describe('service', function() {
 
         }));
 
+        beforeEach(function() {
+            this.addMatchers({
+                toMatchCategory: function(category) {
+                    var card = this.actual;
+
+                    this.message = function() {
+                        return 'expected '+card.name+' to match '+category;
+                    };
+                    return svc.matchesCategory(category, card);
+                }
+            })
+        });
+
+
         it('should handle diff categories', function() {
-            expect(svc.matchesCategory('both', {_diffResult: 'both'})).toBe(true);
-            expect(svc.matchesCategory('added', {_diffResult: 'both'})).toBe(false);
-            expect(svc.matchesCategory('added', {_diffResult: 'added'})).toBe(true);
-            expect(svc.matchesCategory('removed', {_diffResult: 'removed'})).toBe(true);
-            expect(svc.matchesCategory('added', eliteVanguard)).toBe(false);
-            expect(svc.matchesCategory('added', angular.extend({}, eliteVanguard, {_diffResult: 'added'}))).toBe(true);
-            expect(svc.matchesCategory('added', angular.extend({}, eliteVanguard, {_diffResult: 'both'}))).toBe(false);
+            expect({_diffResult: 'both'}).toMatchCategory('both');
+            expect({_diffResult: 'both'}).not.toMatchCategory('added');
+            expect({_diffResult: 'added'}).toMatchCategory('added');
+            expect({_diffResult: 'removed'}).toMatchCategory('removed');
+            expect(eliteVanguard).not.toMatchCategory('added');
+            expect(angular.extend({}, eliteVanguard, {_diffResult: 'added'})).toMatchCategory('added');
+            expect(angular.extend({}, eliteVanguard, {_diffResult: 'both'})).not.toMatchCategory('added');
         });
 
         it('should handle monocolor and negation', function() {
-            expect(svc.matchesCategory('MonoWhite', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('White', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('White/Blue', eliteVanguard)).toBe(false);
-            expect(svc.matchesCategory('!Blue/!Black', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('!White', eliteVanguard)).toBe(false);
+            expect(eliteVanguard).toMatchCategory('MonoWhite');
+            expect(eliteVanguard).toMatchCategory('White');
+            expect(eliteVanguard).not.toMatchCategory('White/Blue');
+            expect(eliteVanguard).toMatchCategory('!Blue/!Black');
+            expect(eliteVanguard).not.toMatchCategory('!White');
             // a white and black card is white
-            expect(svc.matchesCategory('MonoWhite', sculler)).toBe(false);
+            expect(sculler).not.toMatchCategory('MonoWhite');
         });
         it('should handle simple types and negation', function() {
 
-            expect(svc.matchesCategory('Creature', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('!Creature', eliteVanguard)).toBe(false);
+            expect(eliteVanguard).toMatchCategory('Creature');
+            expect(eliteVanguard).not.toMatchCategory('!Creature');
         });
 
         it('should handle either/or categories intelligently', function() {
-            expect(svc.matchesCategory('Sorcery|Instant', eliteVanguard)).toBe(false);
-            expect(svc.matchesCategory('Artifact|Creature|Planeswalker', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('Colorless/Artifact|Creature|Planeswalker', karn)).toBe(true);
-            expect(svc.matchesCategory('Sorcery|Instant', damnation)).toBe(true);
-            expect(svc.matchesCategory('!Sorcery|!Black', damnation)).toBe(false);
+            expect(eliteVanguard).not.toMatchCategory('Sorcery|Instant');
+            expect(eliteVanguard).toMatchCategory('Artifact|Creature|Planeswalker');
+            expect(karn).toMatchCategory('Colorless/Artifact|Creature|Planeswalker');
+            expect(damnation).toMatchCategory('Sorcery|Instant');
+            expect(damnation).not.toMatchCategory('!Sorcery|!Black');
             // this is an unhelpful category, but a sorcery is not an instant, sooo...
-            expect(svc.matchesCategory('!Sorcery|!Instant', damnation)).toBe(true);
+            expect(damnation).toMatchCategory('!Sorcery|!Instant');
             // Black "spells"
-            expect(svc.matchesCategory('Black/Sorcery|Instant', damnation)).toBe(true);
-            expect(svc.matchesCategory('Sorcery|Instant/Black', damnation)).toBe(true);
-            expect(svc.matchesCategory('Blue/Sorcery|Instant', damnation)).toBe(false);
-            expect(svc.matchesCategory('Sorcery|Instant/Blue', damnation)).toBe(false);
-            expect(svc.matchesCategory('Sorcery|Creature/Black', damnation)).toBe(true);
-            expect(svc.matchesCategory('Instant|Creature/Black', damnation)).toBe(false);
+            expect(damnation).toMatchCategory('Black/Sorcery|Instant');
+            expect(damnation).toMatchCategory('Sorcery|Instant/Black');
+            expect(damnation).not.toMatchCategory('Blue/Sorcery|Instant');
+            expect(damnation).not.toMatchCategory('Sorcery|Instant/Blue');
+            expect(damnation).toMatchCategory('Sorcery|Creature/Black');
+            expect(damnation).not.toMatchCategory('Instant|Creature/Black');
             // this isn't that helpful, but there it is
-            expect(svc.matchesCategory('converted_mana_cost<3|converted_mana_cost>=0', sculler)).toBe(true);
+            expect(sculler).toMatchCategory('converted_mana_cost<3|converted_mana_cost>=0');
             // this isn't possible, but again, there it is
-            expect(svc.matchesCategory('converted_mana_cost>3/converted_mana_cost<=0', sculler)).toBe(false);
+            expect(sculler).not.toMatchCategory('converted_mana_cost>3/converted_mana_cost<=0');
         });
 
         it('should handle colorless checks', function() {
-            expect(svc.matchesCategory('!Colorless', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('Colorless', eliteVanguard)).toBe(false);
-            expect(svc.matchesCategory('!Colorless', karn)).toBe(false);
-            expect(svc.matchesCategory('Colorless', karn)).toBe(true);
-            expect(svc.matchesCategory('!Colorless', dynamo)).toBe(false);
-            expect(svc.matchesCategory('Colorless', dynamo)).toBe(true);
+            expect(eliteVanguard).toMatchCategory('!Colorless');
+            expect(eliteVanguard).not.toMatchCategory('Colorless');
+            expect(karn).not.toMatchCategory('!Colorless');
+            expect(karn).toMatchCategory('Colorless');
+            expect(dynamo).not.toMatchCategory('!Colorless');
+            expect(dynamo).toMatchCategory('Colorless');
         });
 
         it('should handle mono vs multi vs "normal"color checks', function() {
-            expect(svc.matchesCategory('MonoWhite', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('White', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('White/Black', eliteVanguard)).toBe(false);
-            expect(svc.matchesCategory('Black/White', eliteVanguard)).toBe(false);
-            expect(svc.matchesCategory('White|Black', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('Black|White', eliteVanguard)).toBe(true);
-            expect(svc.matchesCategory('MonoWhite', sculler)).toBe(false);
-            expect(svc.matchesCategory('MonoBlack', sculler)).toBe(false);
-            expect(svc.matchesCategory('White', sculler)).toBe(true);
-            expect(svc.matchesCategory('Black', sculler)).toBe(true);
-            expect(svc.matchesCategory('White/Black', sculler)).toBe(true);
-            expect(svc.matchesCategory('Black/White', sculler)).toBe(true);
-            expect(svc.matchesCategory('White|Black', sculler)).toBe(true);
-            expect(svc.matchesCategory('Black|White', sculler)).toBe(true);
-            expect(svc.matchesCategory('White/Black', sculler)).toBe(true);
-            expect(svc.matchesCategory('Black/White/Blue', sculler)).toBe(false);
-            expect(svc.matchesCategory('White|Black', sculler)).toBe(true);
-            expect(svc.matchesCategory('Black|White', sculler)).toBe(true);
+            expect(eliteVanguard).toMatchCategory('MonoWhite');
+            expect(eliteVanguard).toMatchCategory('White');
+            expect(eliteVanguard).not.toMatchCategory('White/Black');
+            expect(eliteVanguard).not.toMatchCategory('Black/White');
+            expect(eliteVanguard).toMatchCategory('White|Black');
+            expect(eliteVanguard).toMatchCategory('Black|White');
+            expect(sculler).not.toMatchCategory('MonoWhite');
+            expect(sculler).not.toMatchCategory('MonoBlack');
+            expect(sculler).toMatchCategory('White');
+            expect(sculler).toMatchCategory('Black');
+            expect(sculler).toMatchCategory('White/Black');
+            expect(sculler).toMatchCategory('Black/White');
+            expect(sculler).toMatchCategory('White|Black');
+            expect(sculler).toMatchCategory('Black|White');
+            expect(sculler).toMatchCategory('White/Black');
+            expect(sculler).not.toMatchCategory('Black/White/Blue');
+            expect(sculler).toMatchCategory('White|Black');
+            expect(sculler).toMatchCategory('Black|White');
         });
 
         it('can handle categories like "3-color"', function() {
-            expect(svc.matchesCategory('zero-color', karn)).toBe(true);
-            expect(svc.matchesCategory('0-color', karn)).toBe(true);
-            expect(svc.matchesCategory('2 color', sculler)).toBe(true);
-            expect(svc.matchesCategory('2  Color', sculler)).toBe(true);
-            expect(svc.matchesCategory('2color', sculler)).toBe(true);
-            expect(svc.matchesCategory('2-color', sculler)).toBe(true);
-            expect(svc.matchesCategory('2+ color', sculler)).toBe(true);
-            expect(svc.matchesCategory('2+color', sculler)).toBe(true);
-            expect(svc.matchesCategory('2+-color', sculler)).toBe(true);
-            expect(svc.matchesCategory('tri-color', sculler)).toBe(false);
-            expect(svc.matchesCategory('5-color', sculler)).toBe(false);
-            expect(svc.matchesCategory('2+ color', ultimatum)).toBe(true);
-            expect(svc.matchesCategory('tri-color', ultimatum)).toBe(true);
-            expect(svc.matchesCategory('tri+-color', ultimatum)).toBe(true);
-            expect(svc.matchesCategory('5-color', ultimatum)).toBe(false);
-            expect(svc.matchesCategory('three-color', nephilim)).toBe(false);
-            expect(svc.matchesCategory('2-color', nephilim)).toBe(false);
-            expect(svc.matchesCategory('2+-color', nephilim)).toBe(true);
-            expect(svc.matchesCategory('4-color', nephilim)).toBe(true);
-            expect(svc.matchesCategory('quad+-color', nephilim)).toBe(true);
-            expect(svc.matchesCategory('5-color', nephilim)).toBe(false);
-            expect(svc.matchesCategory('2-color', sliverQueen)).toBe(false);
-            expect(svc.matchesCategory('2+-color', sliverQueen)).toBe(true);
-            expect(svc.matchesCategory('3+-color', sliverQueen)).toBe(true);
-            expect(svc.matchesCategory('4+-color', sliverQueen)).toBe(true);
-            expect(svc.matchesCategory('5+-color', sliverQueen)).toBe(true);
-            expect(svc.matchesCategory('5-color', sliverQueen)).toBe(true);
+            expect(karn).toMatchCategory('zero-color');
+            expect(karn).toMatchCategory('0-color');
+            expect(sculler).toMatchCategory('2 color');
+            expect(sculler).toMatchCategory('2  Color');
+            expect(sculler).toMatchCategory('2color');
+            expect(sculler).toMatchCategory('2-color');
+            expect(sculler).toMatchCategory('2+ color');
+            expect(sculler).toMatchCategory('2+color');
+            expect(sculler).toMatchCategory('2+-color');
+            expect(sculler).not.toMatchCategory('tri-color');
+            expect(sculler).not.toMatchCategory('5-color');
+            expect(ultimatum).toMatchCategory('2+ color');
+            expect(ultimatum).toMatchCategory('tri-color');
+            expect(ultimatum).toMatchCategory('tri+-color');
+            expect(ultimatum).not.toMatchCategory('5-color');
+            expect(nephilim).not.toMatchCategory('three-color');
+            expect(nephilim).not.toMatchCategory('2-color');
+            expect(nephilim).toMatchCategory('2+-color');
+            expect(nephilim).toMatchCategory('4-color');
+            expect(nephilim).toMatchCategory('quad+-color');
+            expect(nephilim).not.toMatchCategory('5-color');
+            expect(sliverQueen).not.toMatchCategory('2-color');
+            expect(sliverQueen).toMatchCategory('2+-color');
+            expect(sliverQueen).toMatchCategory('3+-color');
+            expect(sliverQueen).toMatchCategory('4+-color');
+            expect(sliverQueen).toMatchCategory('5+-color');
+            expect(sliverQueen).toMatchCategory('5-color');
             // don't yet have a correct way of handling this as a special case
-//            expect(svc.matchesCategory('2-color', wwwww)).toBe(false);
-//            expect(svc.matchesCategory('2+-color', wwwww)).toBe(true);
-//            expect(svc.matchesCategory('3+-color', wwwww)).toBe(true);
-//            expect(svc.matchesCategory('4+-color', wwwww)).toBe(true);
-//            expect(svc.matchesCategory('5+-color', wwwww)).toBe(true);
-//            expect(svc.matchesCategory('5-color', wwwww)).toBe(true);
+//            expect(wwwww).not.toMatchCategory('2-color');
+//            expect(wwwww).toMatchCategory('2+-color');
+//            expect(wwwww).toMatchCategory('3+-color');
+//            expect(wwwww).toMatchCategory('4+-color');
+//            expect(wwwww).toMatchCategory('5+-color');
+//            expect(wwwww).toMatchCategory('5-color');
         });
 
         it('should distinguish between colorless and artifacts', function() {
-            expect(svc.matchesCategory('Colorless/Artifact', karn)).toBe(false);
-            expect(svc.matchesCategory('Colorless/!Artifact', karn)).toBe(true);
-            expect(svc.matchesCategory('Colorless/!Artifact/!Land', karn)).toBe(true);
-            expect(svc.matchesCategory('Colorless/Artifact', dynamo)).toBe(true);
-            expect(svc.matchesCategory('Colorless/!Artifact', dynamo)).toBe(false);
-            expect(svc.matchesCategory('Colorless/Artifact/!Land', dynamo)).toBe(true);
-            expect(svc.matchesCategory('Colorless/Artifact', dynamo)).toBe(true);
-            expect(svc.matchesCategory('Artifact', sculler)).toBe(true);
-            expect(svc.matchesCategory('Multicolor/Artifact', sculler)).toBe(true);
-            expect(svc.matchesCategory('!Colorless/Artifact', sculler)).toBe(true);
+            expect(karn).not.toMatchCategory('Colorless/Artifact');
+            expect(karn).toMatchCategory('Colorless/!Artifact');
+            expect(karn).toMatchCategory('Colorless/!Artifact/!Land');
+            expect(dynamo).toMatchCategory('Colorless/Artifact');
+            expect(dynamo).not.toMatchCategory('Colorless/!Artifact');
+            expect(dynamo).toMatchCategory('Colorless/Artifact/!Land');
+            expect(dynamo).toMatchCategory('Colorless/Artifact');
+            expect(sculler).toMatchCategory('Artifact');
+            expect(sculler).toMatchCategory('Multicolor/Artifact');
+            expect(sculler).toMatchCategory('!Colorless/Artifact');
         });
 
         it('should allow intelligent combinations of categories', function() {
-            expect(svc.matchesCategory('Colorless', sculler)).toBe(false);
-            expect(svc.matchesCategory('Artifact/Colorless', sculler)).toBe(false);
-            expect(svc.matchesCategory('Colorless/Artifact/Land', dynamo)).toBe(false);
-            expect(svc.matchesCategory('Colorless/Land/Artifact', dynamo)).toBe(false);
-            expect(svc.matchesCategory('Colorless/Artifact', sculler)).toBe(false);
+            expect(sculler).not.toMatchCategory('Colorless');
+            expect(sculler).not.toMatchCategory('Artifact/Colorless');
+            expect(dynamo).not.toMatchCategory('Colorless/Artifact/Land');
+            expect(dynamo).not.toMatchCategory('Colorless/Land/Artifact');
+            expect(sculler).not.toMatchCategory('Colorless/Artifact');
         });
 
         it('should handle converted mana cost', function() {
             angular.forEach(['cmc', 'converted_mana_cost'], function(cmc) {
                 // support a short a long form
-                expect(svc.matchesCategory(cmc + '==2', sculler)).toBe(true);
-                expect(svc.matchesCategory(cmc + '<=2', sculler)).toBe(true);
-                expect(svc.matchesCategory(cmc + '<=3', sculler)).toBe(true);
-                expect(svc.matchesCategory(cmc + '<3', sculler)).toBe(true);
-                expect(svc.matchesCategory(cmc + '<3/' + cmc + '>=0', sculler)).toBe(true);
-                expect(svc.matchesCategory(cmc + '==2', dynamo)).toBe(false);
-                expect(svc.matchesCategory(cmc + '<=2', dynamo)).toBe(false);
-                expect(svc.matchesCategory(cmc + '<=3', dynamo)).toBe(false);
-                expect(svc.matchesCategory(cmc + '<3', dynamo)).toBe(false);
+                expect(sculler).toMatchCategory(cmc + '==2');
+                expect(sculler).toMatchCategory(cmc + '<=2');
+                expect(sculler).toMatchCategory(cmc + '<=3');
+                expect(sculler).toMatchCategory(cmc + '<3');
+                expect(sculler).toMatchCategory(cmc + '<3/' + cmc + '>=0');
+                expect(dynamo).not.toMatchCategory(cmc + '==2');
+                expect(dynamo).not.toMatchCategory(cmc + '<=2');
+                expect(dynamo).not.toMatchCategory(cmc + '<=3');
+                expect(dynamo).not.toMatchCategory(cmc + '<3');
                 // in case there was ever a lexicographical vs numerical sort thing
-                expect(svc.matchesCategory(cmc + '>3', emrakul)).toBe(true);
-                expect(svc.matchesCategory(cmc + '<3', emrakul)).toBe(false);
+                expect(emrakul).toMatchCategory(cmc + '>3');
+                expect(emrakul).not.toMatchCategory(cmc + '<3');
             })
         });
 
-        it('should handle the "any" case', function() {
-            expect(svc.matchesCategory('Any', sculler)).toBe(true);
-            expect(svc.matchesCategory('!Any', sculler)).toBe(false);
-            expect(svc.matchesCategory('Any|Artifact', sculler)).toBe(true);
-            expect(svc.matchesCategory('Any/Artifact', sculler)).toBe(true);
-            expect(svc.matchesCategory('Any/!Artifact', sculler)).toBe(false);
-            expect(svc.matchesCategory('!Any', sculler)).toBe(false);
-            expect(svc.matchesCategory('!Any/Artifact', sculler)).toBe(false);
-            expect(svc.matchesCategory('!Any|Artifact', sculler)).toBe(true);
+        it('should handle the color castability case', function() {
+            expect(eliteVanguard).toMatchCategory('WhiteCastable');
+            expect(eliteVanguard).not.toMatchCategory('BlackCastable');
         });
 
-        var assertChanged = function(category, card,
-                                     heuristics, preHeuristic) {
-            heuristics = heuristics || [];
-            expect(svc.matchesCategory(category, card)).toBe(preHeuristic);
-            //it's now different after the heuristic is applied
-            heuristicsSvc.select(heuristics);
-            expect(svc.matchesCategory(category, card)).toBe(!preHeuristic);
-        };
-
-        var assertUnchanged = function(category, card,
-                                       heuristics, preHeuristic) {
-            heuristics = heuristics || [];
-            expect(svc.matchesCategory(category, card)).toBe(preHeuristic);
-            //it's not different after the heuristic is applied
-            heuristicsSvc.select(heuristics);
-            expect(svc.matchesCategory(category, card)).toBe(preHeuristic);
-        };
-
-        // not yet ported from cuesbey
-//        it('should handle heuristics that override categories', function() {
-//
-//            assertChanged('!Creature', souls, ['token_spells_are_creatures'], true);
-//            // they don't always overwrite
-//            assertUnchanged('Sorcery', souls, ['token_spells_are_creatures'], true);
-//            assertChanged('Multicolor', souls, ['off_color_flashback_is_gold'], false);
-//            assertChanged('converted_mana_cost==3', legionnaire, ['phyrexian_always_pays_life'], true);
-//            assertChanged('converted_mana_cost==2', legionnaire, ['phyrexian_always_pays_life'], false);
-//            assertChanged('White', legionnaire, ['phyrexian_always_pays_life'], true);
-//            assertChanged('Colorless', legionnaire, ['phyrexian_always_pays_life'], false);
-//            // they don't always affect things
-//            assertUnchanged('Artifact', legionnaire, ['phyrexian_always_pays_life'], true);
-//            assertChanged('converted_mana_cost==X', devilsPlay, ['x_spells_are_infinite'], false);
-//            assertChanged('converted_mana_cost==1', devilsPlay, ['x_spells_are_infinite'], true);
-//            assertChanged('converted_mana_cost>=6', devilsPlay, ['x_spells_are_infinite'], false);
-//        });
-
-        it('shouldn\'t mess up if a card has no heuristics', function() {
-            assertUnchanged('White', eliteVanguard, ['token_spells_are_creatures'], true);
+        it('should handle the "any" case', function() {
+            expect(sculler).toMatchCategory('Any');
+            expect(sculler).not.toMatchCategory('!Any');
+            expect(sculler).toMatchCategory('Any|Artifact');
+            expect(sculler).toMatchCategory('Any/Artifact');
+            expect(sculler).not.toMatchCategory('Any/!Artifact');
+            expect(sculler).not.toMatchCategory('!Any');
+            expect(sculler).not.toMatchCategory('!Any/Artifact');
+            expect(sculler).toMatchCategory('!Any|Artifact');
         });
 
         it('should handle converted mana costs with X', function() {
-            expect(svc.matchesCategory('converted_mana_cost<X', emrakul)).toBe(true);
-            expect(svc.matchesCategory('converted_mana_cost>X', emrakul)).toBe(false);
+            expect(emrakul).toMatchCategory('converted_mana_cost<X');
+            expect(emrakul).not.toMatchCategory('converted_mana_cost>X');
         });
     });
 
-
-        describe("cubeSortServiceTest", function() {
-
+    describe("cubeSortServiceTest", function() {
         var svc;
 
         beforeEach(inject(function ($injector, CubeSortService) {
@@ -490,7 +496,7 @@ describe('service', function() {
                 }
             });
 
-            namify(sortedCube);
+            namifySortedCube(sortedCube);
 
             expect(sortedCube).toEqual([{
                 category: 'Multicolor',
@@ -536,7 +542,7 @@ describe('service', function() {
 
     });
 
-        describe("sortSpecServiceTest", function() {
+    describe("sortSpecServiceTest", function() {
         var svc;
         beforeEach(inject(function ($injector, SortSpecService) {
             svc = SortSpecService;
@@ -719,32 +725,6 @@ describe('service', function() {
                 }]
             }]);
         });
-
-        it('should handle appearance keys not at the top level', function() {
-
-            specExpect({
-                'Creature': {
-                    'MonoWhite': {
-                        'appearance': 'div',
-                        'converted_mana_cost>=1': {
-                            'appearance': 'table'
-                        }
-                    }
-                }
-            }, [{
-                'category': 'Creature',
-                'subcategories': [{
-                    'category': 'MonoWhite',
-                    'appearance': 'div',
-                    'subcategories': [{
-                        category: 'converted_mana_cost>=1',
-                        appearance: 'table',
-                        subcategories: diffSpec
-                    }]
-                }]
-            }], true);
-        });
-
     });
 
 });
