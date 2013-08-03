@@ -85,3 +85,10 @@ table.card-layout th,
 table.card-layout td {
     border: 1px solid #aaaeb4;
 }
+
+div.tooltip > div.tooltip-inner{
+    border: none;
+    max-height: none;
+    max-width: none;
+    padding: 0;
+}

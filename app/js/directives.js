@@ -62,7 +62,7 @@ angular.module('lambic.directives', []).
                    '<div class="row layout-container">' +
                    '<div class="span10">' +
 //                       '<label>Creatures</label>' +
-                   '<smart-table data="table"></smart-table>' +
+                   '<smart-table data="table" classes="lambicCardClasses"></smart-table>' +
                    '</div>' +
                    '</div>' +
 //                   '<div class="row">' +
@@ -74,6 +74,7 @@ angular.module('lambic.directives', []).
                    '</div>';
                var newElement = angular.element(template);
                scope.table = CubeSortService.sortTable(scope.data, scope.spec);
+               scope.lambicCardClasses = ['screenshot'];
                $compile(newElement)(scope);
                element.replaceWith(newElement);
            }
@@ -131,7 +132,7 @@ angular.module('lambic.directives', []).
                     {name: 'All', category: 'Any'}
                 ];
 
-                $scope.template = 'item.name'
+                $scope.template = '<div tooltip-placement="right" tooltip-html-unsafe="<img id=\'cardview\' style=\'border:none;height=310px;width=223px\' src=\'http://gatherer.wizards.com/Handlers/Image.ashx?name={{ item.name }}&type=card\'>">{{ item.name }}</div>';
 
             },
             link: function(scope) {
@@ -166,7 +167,6 @@ angular.module('lambic.directives', []).
             },
 
             link: function(scope, element) {
-                console.log('rendering a smart table');
 
                 scope.$watch('data', function() {
                     var items = [];
@@ -182,6 +182,14 @@ angular.module('lambic.directives', []).
                 var classes = (scope.additionalClasses || []);
                 classes.push('smart-table-cell');
 
+                var tdContent;
+                if (scope.displayTemplate) {
+                    console.log('setting up a cool display template '+ scope.displayTemplate)
+                    tdContent = scope.displayTemplate;
+                } else {
+                    tdContent = '{{ item || "&nbsp;"}}';
+                }
+
                 var template = '' +
                     '<table class="smart-table card-layout">' +
                         '<tr>' +
@@ -191,10 +199,13 @@ angular.module('lambic.directives', []).
                         '</tr>' +
                         '<tr ng-repeat="row in zipped">' +
                             '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
-                                '{{ '+ (scope.displayTemplate || 'item') +' || "&nbsp;"}}' +
+                                tdContent +
                             '</td>' +
                         '</tr>' +
                     '</table>';
+
+                console.log('using the following template');
+                console.log(template);
 
                 var newElement = angular.element(template);
                 $compile(newElement)(scope);

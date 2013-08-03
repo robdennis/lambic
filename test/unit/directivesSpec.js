@@ -18,7 +18,8 @@ describe('directives', function() {
 
     describe('smart-table', function() {
         var elm, compile, scope;
-        var nbspChar = String.fromCharCode(160); //the &nbsp; character
+//        var nbspChar = String.fromCharCode(160); //the &nbsp; character
+        var nbspChar = '&nbsp;';
 
         var tableToHaveText = function(expectedValuesByRowThenCell, table) {
             table = table || this.actual;
@@ -31,7 +32,7 @@ describe('directives', function() {
             for (var i=1; i<rows.length; i++) {
                 var cells = angular.element(rows[i]).find('td');
                 for (var j=0; j<cells.length; j++) {
-                    var actualCell = angular.element(cells[j]).text();
+                    var actualCell = angular.element(cells[j]).html();
                     var expectedCell = expectedValuesByRowThenCell[i-1][j];
                     if ( actualCell !== expectedCell) {
                         this.message = function() {
@@ -78,13 +79,11 @@ describe('directives', function() {
                     return actualRows === height && actualWidths[0] === length;
                 },
 
-//                tableToHaveText: tableToHaveText,
-
                 toHaveText: function(expectedValuesByRowThenCell, template) {
                     // this is going to assume that the dimensions match up with expectations
                     var table = getCompiledSmartTable(this.actual, template);
 
-                    return tableToHaveText(expectedValuesByRowThenCell, table);
+                    return tableToHaveText.apply(this, [expectedValuesByRowThenCell, table]);
                 }
             });
         });
@@ -214,12 +213,21 @@ describe('directives', function() {
             ]);
         });
 
+        it('can accept an arbitrary html string, with scope variables', function() {
+            expect(differentRowsObjects).toHaveText([
+                ['<b class="ng-binding">foo</b>', '<b class="ng-binding">foo</b>'],
+                ['<b class="ng-binding">bar</b>', '<b class="ng-binding">bar</b>'],
+                ['<b class="ng-binding">baz</b>', '<b class="ng-binding">baz</b>'],
+                ['<b class="ng-binding">bax</b>', '<b class="ng-binding"></b>']
+            ], '<b>{{item.name}}</b>');
+        });
+
         it('can accept a template "unknown" scope variable', function() {
             expect(sameRows).toHaveText([
                 [nbspChar, nbspChar],
                 [nbspChar, nbspChar],
                 [nbspChar, nbspChar]
-            ], 'unknown');
+            ], '{{ unknown || "&nbsp;" }}');
         });
 
         it("can accept a template that's just a the value", function() {
@@ -227,7 +235,7 @@ describe('directives', function() {
                 ['foo', 'foo'],
                 ['bar', 'bar'],
                 ['baz', 'baz']
-            ], 'item');
+            ], '{{ item || "&nbsp;" }}');
         });
 
         it("can accept a template that's an attribute access", function() {
@@ -235,14 +243,14 @@ describe('directives', function() {
                 ['foo', 'foo'],
                 ['bar', 'bar'],
                 ['baz', 'baz']
-            ], 'item.name');
+            ], '{{ item.name || "&nbsp;" }}');
 
             expect(differentRowsObjects).toHaveText([
                     ['foo', 'foo'],
                     ['bar', 'bar'],
                     ['baz', 'baz'],
                     ['bax', nbspChar]
-                ], 'item.name');
+                ], '{{ item.name || "&nbsp;" }}');
 
         });
 
@@ -251,18 +259,14 @@ describe('directives', function() {
                     [nbspChar, nbspChar],
                     [nbspChar, nbspChar],
                     [nbspChar, nbspChar]
-                ], 'item.unknown');
+                ], '{{ item.unknown || "&nbsp;" }}');
 
             expect(differentRowsObjects).toHaveText([
                     [nbspChar, nbspChar],
                     [nbspChar, nbspChar],
                     [nbspChar, nbspChar],
                     [nbspChar, nbspChar]
-                ], 'item.unknown');
-        });
-
-        it('preserves the order of the object', function() {
-
+                ], '{{ item.unknown || "&nbsp;" }}');
         });
 
         it('can set custom classes', function() {
