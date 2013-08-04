@@ -59,7 +59,7 @@ angular.module('lambic.directives', []).
 
                var template = '' +
                    '<div>' +
-                   '<div class="row layout-container">' +
+                   '<div class="row layout-container cardgrid">' +
                    '<div class="span10">' +
 //                       '<label>Creatures</label>' +
                    '<smart-table data="table" classes="lambicCardClasses"></smart-table>' +
