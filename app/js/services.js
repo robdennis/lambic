@@ -211,7 +211,6 @@ angular.module('lambic.services', [])
                 }
 
                 var colors = colorMatch[1].split('&');
-//                console.log('colors are: ', colors);
 
                 return ManaCostRegexService.isCastableBy(colors, card.mana_cost);
 
@@ -308,7 +307,6 @@ angular.module('lambic.services', [])
             },
             makeMatcher: function(category) {
                 var self = this;
-                console.log('made a matcher for category ' + category);
                 return function() {
                     // "this" in this context is the card
                     return self.matchesCategory(category, this);
@@ -571,7 +569,6 @@ angular.module('lambic.services', [])
                     tableData = [];
                 } else {
                     tableData = tableQuery;
-                    console.log('all the data', tableData);
                 }
 
                 var cube = this.sortCube(tableData, sortSpec);
@@ -704,7 +701,11 @@ angular.module('lambic.services', [])
                 // the callback is unnecessary, but a bit of future proofing
                 // in case the cache is backed somewhere where we need the async
                 // access
-                return callback(cache({name: name}).first())
+                var result = cache({name: name}).first();
+                if (!result) {
+                    console.log('unable to get a card using '+name)
+                }
+                return callback(result);
             }
         };
     });
