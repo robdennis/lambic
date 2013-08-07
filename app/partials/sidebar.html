@@ -5,8 +5,11 @@
         </div>
     </div>
     <div class="row" id=sidebar-main>
-        <div class="span2" id="drill">
-            drill
+        <div class="span2">
+            <form>
+                <textarea id="plaintext" ng-model="plaintext"></textarea>
+                <button type="submit" class="btn" ng-click="makePool()">Make Pool</button>
+            </form>
         </div>
     </div>
 </div>

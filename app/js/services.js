@@ -211,7 +211,6 @@ angular.module('lambic.services', [])
                 }
 
                 var colors = colorMatch[1].split('&');
-                console.log('colors are: ', colors);
 
                 return ManaCostRegexService.isCastableBy(colors, card.mana_cost);
 
@@ -308,7 +307,6 @@ angular.module('lambic.services', [])
             },
             makeMatcher: function(category) {
                 var self = this;
-                console.log('made a matcher for category ' + category);
                 return function() {
                     // "this" in this context is the card
                     return self.matchesCategory(category, this);
@@ -384,6 +382,45 @@ angular.module('lambic.services', [])
             }
         }
     })
+    .factory('NamesFromTextService', function() {
+        // http://stackoverflow.com/a/498995/171094
+
+        var trim=function(stringToTrim){return stringToTrim.replace(/^\s+|\s+$/g, '');};
+
+        return {
+            getNames: function(text) {
+                var names = [];
+
+                angular.forEach(text.split('\n'), function(line) {
+                    if (line) {
+                        var name, match;
+                        name = trim(line);
+                        // this is the tappedout.net formatting string:
+                        //3x Llanowar Elves
+                        //3x Llanowar Elves [M10] (specific printing)
+                        //3x Llanowar Elves *F* (foil)
+                        //3x Llanowar Elves *GE* (German language card)
+                        //3x Llanowar Elves [M10] *F* (see a pattern?)
+                        // the space after numeral handles deckstats
+                        match = /^(?:(\d+)\s*(?:x|-| )\s*)?(.*?)(?:(?:\[|\*).*)?$/.exec(name);
+                        if (match) {
+                            // there are potentially multiples in match[1]
+                            // assume that's the case
+                            for (var i=0;i<parseInt(match[1] || "1");i++) {
+                                names.push(trim(match[2]))
+                            }
+                        } else {
+                            // forget it, no special handling other than the
+                            // original trimming
+                            names.push(name);
+                        }
+                    }
+                });
+
+                return names;
+            }
+        }
+    })
     .factory('PoolService', function($rootScope, CardCacheService, CardCategoryService) {
         var pool = new TAFFY();
         var callbacks = [];
@@ -402,6 +439,19 @@ angular.module('lambic.services', [])
                 querySet = querySet || pool();
 
                 return querySet.filter(CardCategoryService.makeMatcher(cat))
+
+            },
+
+            set: function(names) {
+                pool().remove(true);
+
+                angular.forEach(names, function(name) {
+                    CardCacheService.get_card(name, function(card) {
+                    if (card) {
+                        pool.insert(card);
+                    }
+                    });
+                });
 
             },
 
@@ -519,7 +569,6 @@ angular.module('lambic.services', [])
                     tableData = [];
                 } else {
                     tableData = tableQuery;
-                    console.log('all the data', tableData);
                 }
 
                 var cube = this.sortCube(tableData, sortSpec);
@@ -652,7 +701,11 @@ angular.module('lambic.services', [])
                 // the callback is unnecessary, but a bit of future proofing
                 // in case the cache is backed somewhere where we need the async
                 // access
-                return callback(cache({name: name}).first())
+                var result = cache({name: name}).first();
+                if (!result) {
+                    console.log('unable to get a card using '+name)
+                }
+                return callback(result);
             }
         };
     });

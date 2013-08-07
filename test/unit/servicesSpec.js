@@ -456,6 +456,58 @@ describe('service', function() {
             expect(emrakul).not.toMatchCategory('converted_mana_cost>X');
         });
     });
+    describe("namesFromTextServiceTest", function() {
+        var svc;
+        var expected = [
+            'Elite Vanguard',
+            'Wrath of God',
+            'Wrath of God'
+        ];
+        beforeEach(inject(function ($injector, NamesFromTextService) {
+            svc = NamesFromTextService;
+        }));
+
+        it('should handle one valid card per line', function() {
+            expect(svc.getNames(
+                    'Elite Vanguard\n'+
+                    'Wrath of God\n' +
+                    'Wrath of God\n'
+            )).toEqual(expected);
+                expect(svc.getNames(
+                    'Elite Vanguard\n'+
+                    '\n'+
+                    'Wrath of God\n' +
+                    'Wrath of God'
+            )).toEqual(expected);
+        });
+
+        it('should handle one card per line and handle extra space', function() {
+            expect(svc.getNames(
+                    'Elite Vanguard \n'+
+                    'Wrath of God \n' +
+                    ' Wrath of God\n'
+            )).toEqual(expected);
+        });
+
+        it('should handle tapped-out style formatting', function() {
+            expect(svc.getNames(
+                    '1x Elite Vanguard \n'+
+                    '2x Wrath of God\n'
+            )).toEqual(expected);
+            expect(svc.getNames(
+                    '1x Elite Vanguard *F*\n'+
+                    'Wrath of God [M10]\n'+
+                    '1x Wrath of God [ZEN] *GE*\n'
+            )).toEqual(expected);
+        });
+
+        it('should handle deckstats style formatting', function() {
+            expect(svc.getNames(
+                    '1 Elite Vanguard \n'+
+                    '2 Wrath of God\n'
+            )).toEqual(expected);
+        });
+    });
 
     describe("cubeSortServiceTest", function() {
         var svc;

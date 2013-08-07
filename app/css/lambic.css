@@ -16,16 +16,18 @@
     /*padding: 0;*/
 }
 
-#hierarchy {
-    background-color: rgba(226, 134, 113, 0.84);
-}
-
 #sidebar-top {
     height: 20%;
 }
 
 #sidebar-main {
     height: 80%;
+    min-height: 80%;
+}
+
+#sidebar-main div, #sidebar-main form {
+    height: 100%;
+    min-height: 100%;
 }
 
 #drill {
@@ -58,22 +60,17 @@ body {
 
 #content .content-viewport {
     height: 90%;
+    overflow-y: auto;
+    overflow-x: inherit;
 }
 
 #content .content-viewport > div{
-    border-style: solid;
-    border-width: 1px;
     height: 100%;
+    width: 96%;
 }
-
-/*div.layout-container {*/
-    /*width: 100%;*/
-    /*min-width: 100%;*/
-/*}*/
 
 table.card-layout {
     width: 100%;
-    min-width: 100%;
     background: #fff;
     border: 1px solid #dce1e9;
     border-bottom: 0;
@@ -91,4 +88,11 @@ div.tooltip > div.tooltip-inner{
     max-height: none;
     max-width: none;
     padding: 0;
+}
+
+#plaintext {
+    resize: none;
+    width: 93%;
+    height: 90%;
+    min-height: 90%;
 }
