@@ -12,8 +12,10 @@ describe('my app', function() {
         it('should have some number of of tabs', function() {
             expect(repeater('.nav-tabs > li').count()).toBeGreaterThan(0);
         });
-        it("there's one tab that is active", function() {
-            expect(repeater('.nav-tabs > li.active').count()).toEqual(1);
+        it("there's one tab that is active, with a count of 0", function() {
+            var navBar = '.nav-tabs > li.active';
+            expect(repeater(navBar).count()).toEqual(1);
+            expect(element(navBar + ' > a').text()).toMatch('\(0\)');
         });
     })
 
