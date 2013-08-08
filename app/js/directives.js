@@ -204,9 +204,6 @@ angular.module('lambic.directives', []).
                         '</tr>' +
                     '</table>';
 
-                console.log('using the following template');
-                console.log(template);
-
                 var newElement = angular.element(template);
                 $compile(newElement)(scope);
                 element.replaceWith(newElement);
