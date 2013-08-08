@@ -22,7 +22,6 @@ angular.module('lambic.directives', []).
            replace: true,
            templateUrl: 'partials/header.html',
            controller: function($scope, PoolService) {
-               console.log($scope.cards.count() + ' cards in the database');
                $scope.add = function(name) {
                    PoolService.add(name);
                }
@@ -147,7 +146,6 @@ angular.module('lambic.directives', []).
                 };
 
                 scope.$watch('pool', function(newPool) {
-                    console.log('refiring panes');
                     angular.forEach(scope.panes, function(pane) {
                         var totalOnPane = PoolService.filterCategory(pane.category, newPool);
                         pane.total = totalOnPane;
@@ -184,7 +182,6 @@ angular.module('lambic.directives', []).
 
                 var tdContent;
                 if (scope.displayTemplate) {
-                    console.log('setting up a cool display template '+ scope.displayTemplate)
                     tdContent = scope.displayTemplate;
                 } else {
                     tdContent = '{{ item || "&nbsp;"}}';

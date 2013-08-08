@@ -10,7 +10,6 @@ function AppCtrl($scope,
                  NamesFromTextService) {
 
     PoolService.subscribe(function(pool) {
-        console.log('my callback is firing! ', pool.count());
         $scope.plaintext = pool.select('name').join('\n');
         $scope.pool = pool;
     });
@@ -20,6 +19,5 @@ function AppCtrl($scope,
         $scope.pool = PoolService.get();
     };
 
-    console.log('inserting a local gatherer dump');
     $scope.cards = CardCacheService.insert(all_cards);
 }

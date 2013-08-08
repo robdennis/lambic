@@ -702,9 +702,6 @@ angular.module('lambic.services', [])
                 // in case the cache is backed somewhere where we need the async
                 // access
                 var result = cache({name: name}).first();
-                if (!result) {
-                    console.log('unable to get a card using '+name)
-                }
                 return callback(result);
             }
         };
