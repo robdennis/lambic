@@ -14,6 +14,19 @@ autoWatch = true;
 
 browsers = ['Chrome', 'Firefox', 'Safari'];
 
+reporters = ['progress', 'coverage'];
+
+//coverage reporter type
+coverageReporter = {
+    dir: 'coverage',
+    type : 'html'
+};
+
+//initiate istanbul code coverage report
+preprocessors = {
+    'app/js/**/*.js': 'coverage'
+};
+
 junitReporter = {
   outputFile: 'test_out/unit.xml',
   suite: 'unit'
