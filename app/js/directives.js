@@ -86,8 +86,8 @@ angular.module('lambic.directives', []).
             template: "" +
                 "<div>" +
 
-                    '<div class="btn-group">' +
-                        '<button ng-repeat="value in categories" class="btn" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}}</button>' +
+                    '<div class="btn-group view-selection">' +
+                        '<button ng-repeat="value in categories" class="btn" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
                     '</div>' +
                     "<div>" +
                         '<smart-table data="selectedCategory.value.data" display-template="template"></smart-table>' +
