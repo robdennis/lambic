@@ -24,7 +24,11 @@ coverageReporter = {
 
 //initiate istanbul code coverage report
 preprocessors = {
-    'app/js/**/*.js': 'coverage'
+    'app/js/app.js': 'coverage',
+    'app/js/controllers.js': 'coverage',
+    'app/js/directives.js': 'coverage',
+    'app/js/filters.js': 'coverage',
+    'app/js/services.js': 'coverage'
 };
 
 junitReporter = {
