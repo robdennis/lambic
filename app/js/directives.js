@@ -10,7 +10,7 @@ angular.module('lambic.directives', []).
                    '<header></header>' +
                    '<div class="row content-viewport">' +
                        '<div class=span10>' +
-                           '<paned-pool-view></paned-pool-view>' +
+                           '<pool-view></pool-view>' +
                        '</div>' +
                    '</div>' +
                '</div>'
@@ -22,7 +22,6 @@ angular.module('lambic.directives', []).
            replace: true,
            templateUrl: 'partials/header.html',
            controller: function($scope, PoolService) {
-               console.log($scope.cards.count() + ' cards in the database');
                $scope.add = function(name) {
                    PoolService.add(name);
                }
@@ -36,66 +35,25 @@ angular.module('lambic.directives', []).
            templateUrl: 'partials/sidebar.html'
        }
     }).
-    directive('cardGrid', function(CubeSortService, $compile) {
-       return {
-           scope: {
-               data: '='
-           },
-           restrict: 'E',
-           replace: true,
-           controller: function($scope) {
-                $scope.spec = {
-                    'cmc<=1': {},
-                    'cmc==2': {},
-                    'cmc==3': {},
-                    'cmc==4': {},
-                    'cmc==5': {},
-                    'cmc==6': {},
-                    'cmc>=7': {}
-                };
-           },
-
-           link: function(scope, element) {
-
-               var template = '' +
-                   '<div>' +
-                   '<div class="row layout-container cardgrid">' +
-                   '<div class="span10">' +
-//                       '<label>Creatures</label>' +
-                   '<smart-table data="table" classes="lambicCardClasses"></smart-table>' +
-                   '</div>' +
-                   '</div>' +
-//                   '<div class="row">' +
-//                   '<div class="span10">' +
-//                       '<label>Non-Creatures</label>' +
-//                       '<smart-table data="standardGrid"></smart-table>' +
-//                       '</div>' +
-//                   '</div>' +
-                   '</div>';
-               var newElement = angular.element(template);
-               scope.table = CubeSortService.sortTable(scope.data, scope.spec);
-               scope.lambicCardClasses = ['screenshot'];
-               $compile(newElement)(scope);
-               element.replaceWith(newElement);
-           }
-       }
-    }).
-    directive('panedPoolView', function(PoolService, CubeSortService) {
+    directive('poolView', function(PoolService, CubeSortService) {
         return {
             restrict: 'E',
             replace: true,
             template: "" +
                 "<div>" +
-                    "<tabs>" +
-                        '<pane ng-repeat="pane in panes" heading="{{pane.name}} ({{pane.total.count()}})" active="pane.active">' +
-                            '<smart-table data="pane.data" display-template="template"></smart-table>' +
-                        "</pane>" +
-                    "</tabs>" +
+                    '<div class="btn-group view-selection">' +
+                        '<div ng-repeat="row in categories|inSlicesOf:6">' +
+                            '<button ng-repeat="value in row" class="btn" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
+                        '</div>' +
+                    '</div>' +
+                    "<div>" +
+                        '<smart-table data="selectedCategory.value.data" display-template="template"></smart-table>' +
+                    "</div>" +
                 "</div>",
             
             controller: function($scope) {
 
-                $scope.panes = [
+                $scope.categories = [
                     {name: 'White', category: 'MonoWhite', active: true},
                     {name: 'Blue', category: 'MonoBlue'},
                     {name: 'Black', category: 'MonoBlack'},
@@ -104,33 +62,35 @@ angular.module('lambic.directives', []).
                     {name: 'Colorless', category: 'Colorless/!Land'},
                     {name: 'Land', category: 'Colorless/Land'},
                     {name: 'Multicolor', category: 'Multicolor'},
-                    {name: 'White-Usable', category: '!Colorless/WhiteCastable'},
-                    {name: 'Blue-Usable', category: '!Colorless/BlueCastable'},
-                    {name: 'Black-Usable', category: '!Colorless/BlackCastable'},
-                    {name: 'Red-Usable', category: '!Colorless/RedCastable'},
-                    {name: 'Green-Usable', category: '!Colorless/GreenCastable'},
-                    {name: 'Azorius-Usable', category: '!Colorless/White&BlueCastable'},
-                    {name: 'Orzhov-Usable', category: '!Colorless/White&BlackCastable'},
-                    {name: 'Boros-Usable', category: '!Colorless/White&RedCastable'},
-                    {name: 'Selesnya-Usable', category: '!Colorless/White&GreenCastable'},
-                    {name: 'Dimir-Usable', category: '!Colorless/Blue&BlackCastable'},
-                    {name: 'Izzet-Usable', category: '!Colorless/Blue&RedCastable'},
-                    {name: 'Simic-Usable', category: '!Colorless/Blue&GreenCastable'},
-                    {name: 'Rakdos-Usable', category: '!Colorless/Black&RedCastable'},
-                    {name: 'Golgari-Usable', category: '!Colorless/Black&GreenCastable'},
-                    {name: 'Gruul-Usable', category: '!Colorless/Red&GreenCastable'},
-                    {name: 'Bant-Usable', category: '!Colorless/White&Blue&GreenCastable'},
-                    {name: 'Esper-Usable', category: '!Colorless/White&Blue&BlackCastable'},
-                    {name: 'Grixis-Usable', category: '!Colorless/Black&Blue&RedCastable'},
-                    {name: 'Jund-Usable', category: '!Colorless/Red&Black&GreenCastable'},
-                    {name: 'Naya-Usable', category: '!Colorless/White&Red&GreenCastable'},
-                    {name: 'WBR-Usable', category: '!Colorless/White&Black&RedCastable'},
-                    {name: 'RUG-Usable', category: '!Colorless/Red&Blue&GreenCastable'},
-                    {name: 'Junk-Usable', category: '!Colorless/Black&White&GreenCastable'},
-                    {name: 'RWU-Usable', category: '!Colorless/Red&White&BlueCastable'},
-                    {name: 'BUG-Usable', category: '!Colorless/Bluck&Blue&GreenCastable'},
+                    {name: 'White-Usable', category: 'WhiteCastable'},
+                    {name: 'Blue-Usable', category: 'BlueCastable'},
+                    {name: 'Black-Usable', category: 'BlackCastable'},
+                    {name: 'Red-Usable', category: 'RedCastable'},
+                    {name: 'Green-Usable', category: 'GreenCastable'},
+                    {name: 'Azorius-Usable', category: 'White&BlueCastable'},
+                    {name: 'Orzhov-Usable', category: 'White&BlackCastable'},
+                    {name: 'Boros-Usable', category: 'White&RedCastable'},
+                    {name: 'Selesnya-Usable', category: 'White&GreenCastable'},
+                    {name: 'Dimir-Usable', category: 'Blue&BlackCastable'},
+                    {name: 'Izzet-Usable', category: 'Blue&RedCastable'},
+                    {name: 'Simic-Usable', category: 'Blue&GreenCastable'},
+                    {name: 'Rakdos-Usable', category: 'Black&RedCastable'},
+                    {name: 'Golgari-Usable', category: 'Black&GreenCastable'},
+                    {name: 'Gruul-Usable', category: 'Red&GreenCastable'},
+                    {name: 'Bant-Usable', category: 'White&Blue&GreenCastable'},
+                    {name: 'Esper-Usable', category: 'White&Blue&BlackCastable'},
+                    {name: 'Grixis-Usable', category: 'Black&Blue&RedCastable'},
+                    {name: 'Jund-Usable', category: 'Red&Black&GreenCastable'},
+                    {name: 'Naya-Usable', category: 'White&Red&GreenCastable'},
+                    {name: 'WBR-Usable', category: 'White&Black&RedCastable'},
+                    {name: 'RUG-Usable', category: 'Red&Blue&GreenCastable'},
+                    {name: 'Junk-Usable', category: 'Black&White&GreenCastable'},
+                    {name: 'RWU-Usable', category: 'Red&White&BlueCastable'},
+                    {name: 'BUG-Usable', category: 'Bluck&Blue&GreenCastable'},
                     {name: 'All', category: 'Any'}
                 ];
+
+                $scope.selectedCategory = {value: $scope.categories[0]};
 
                 $scope.template = '<div tooltip-placement="right" tooltip-html-unsafe="<img id=\'cardview\' style=\'border:none;height=310px;width=223px\' src=\'http://gatherer.wizards.com/Handlers/Image.ashx?name={{ item.name }}&type=card\'>">{{ item.name }}</div>';
 
@@ -147,11 +107,10 @@ angular.module('lambic.directives', []).
                 };
 
                 scope.$watch('pool', function(newPool) {
-                    console.log('refiring panes');
-                    angular.forEach(scope.panes, function(pane) {
-                        var totalOnPane = PoolService.filterCategory(pane.category, newPool);
-                        pane.total = totalOnPane;
-                        pane.data = CubeSortService.sortTable(totalOnPane.get(), spec);
+                    angular.forEach(scope.categories, function(category) {
+                        var totalOnPane = PoolService.filterCategory(category.category, newPool);
+                        category.total = totalOnPane;
+                        category.data = CubeSortService.sortTable(totalOnPane.get(), spec);
                     });
                 })
             }
@@ -184,7 +143,6 @@ angular.module('lambic.directives', []).
 
                 var tdContent;
                 if (scope.displayTemplate) {
-                    console.log('setting up a cool display template '+ scope.displayTemplate)
                     tdContent = scope.displayTemplate;
                 } else {
                     tdContent = '{{ item || "&nbsp;"}}';
@@ -203,9 +161,6 @@ angular.module('lambic.directives', []).
                             '</td>' +
                         '</tr>' +
                     '</table>';
-
-                console.log('using the following template');
-                console.log(template);
 
                 var newElement = angular.element(template);
                 $compile(newElement)(scope);

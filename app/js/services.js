@@ -220,6 +220,9 @@ angular.module('lambic.services', [])
 
                 if (category === 'Colorless') {
                     // special case for colorlessness
+//                    if (!card.colors) {
+//                        console.log('card missing colors: ', JSON.stringify(card))
+//                    }
                     return card.colors.length == 0;
                 }
 
@@ -445,14 +448,12 @@ angular.module('lambic.services', [])
             set: function(names) {
                 pool().remove(true);
 
-                angular.forEach(names, function(name) {
-                    CardCacheService.get_card(name, function(card) {
-                    if (card) {
-                        pool.insert(card);
-                    }
+                CardCacheService.get_cards(names, function(cards) {
+                    pool.insert(cards);
+                    angular.forEach(callbacks, function(callback) {
+                            callback(pool());
                     });
                 });
-
             },
 
             addMany: function(names) {
@@ -702,9 +703,29 @@ angular.module('lambic.services', [])
                 // in case the cache is backed somewhere where we need the async
                 // access
                 var result = cache({name: name}).first();
-                if (!result) {
-                    console.log('unable to get a card using '+name)
-                }
+                return callback(result);
+            },
+
+            get_cards: function(names, callback) {
+                // the callback is unnecessary, but a bit of future proofing
+                // in case the cache is backed somewhere where we need the async
+                // access
+
+                // premature optimization
+//                var nameQuery = [];
+//                var counts = {};
+//
+//                angular.forEach(names, function(name) {
+//                    nameQuery.push({name: name});
+//                    counts[name] = counts[name] ? counts[name] : counts[name] + 1
+//                });
+//
+//                var result = cache(nameQuery).get();
+
+                var result = [];
+                angular.forEach(names, function(name) {
+                    result.push(cache({name:name}).first());
+                });
                 return callback(result);
             }
         };
