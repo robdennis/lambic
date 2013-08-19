@@ -51,7 +51,7 @@ angular.module('lambic.directives', []).
                     "</div>" +
                 "</div>",
             
-            controller: function($scope) {
+            controller: function($scope, CardImageUrlService) {
 
                 $scope.categories = [
                     {name: 'White', category: 'MonoWhite', active: true},
@@ -91,8 +91,17 @@ angular.module('lambic.directives', []).
                 ];
 
                 $scope.selectedCategory = {value: $scope.categories[0]};
+                var htmlTooltipTemplate = "" +
+                    "<img " +
+                        "id='cardview' " +
+                        "style=\'border:none;height=310px;width=223px\' " +
+                        "src='{{item | getUrlFromCard}}'" +
+                    ">";
 
-                $scope.template = '<div tooltip-placement="right" tooltip-html-unsafe="<img id=\'cardview\' style=\'border:none;height=310px;width=223px\' src=\'http://gatherer.wizards.com/Handlers/Image.ashx?name={{ item.name }}&type=card\'>">{{ item.name }}</div>';
+                $scope.template = '' +
+                    '<div tooltip-placement="right" tooltip-html-unsafe="'+htmlTooltipTemplate+'">' +
+                        '{{ item.name }}' +
+                    '</div>';
 
             },
             link: function(scope) {

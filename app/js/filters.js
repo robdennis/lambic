@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lambic.filters', []).
+angular.module('lambic.filters', ['lambic.services']).
     //https://groups.google.com/forum/#!msg/angular/LjwlVYMulN8/KxJVEVibeJkJ
     //http://jsbin.com/isagac/1/edit
     filter('inSlicesOf',
@@ -29,4 +29,11 @@ angular.module('lambic.filters', []).
                     return array;
                 };
             }]
-    );
+    )
+    .filter('getUrlFromCard',
+        ['CardImageUrlService',
+            function(CardImageUrlService) {
+                return function(item) {
+                    return CardImageUrlService.getUrl(item);
+                };
+            }]);

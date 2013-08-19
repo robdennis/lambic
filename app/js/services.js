@@ -707,26 +707,44 @@ angular.module('lambic.services', [])
             },
 
             get_cards: function(names, callback) {
-                // the callback is unnecessary, but a bit of future proofing
+                // the callback is unnecessary, but a bit of future-proofing
                 // in case the cache is backed somewhere where we need the async
                 // access
-
-                // premature optimization
-//                var nameQuery = [];
-//                var counts = {};
-//
-//                angular.forEach(names, function(name) {
-//                    nameQuery.push({name: name});
-//                    counts[name] = counts[name] ? counts[name] : counts[name] + 1
-//                });
-//
-//                var result = cache(nameQuery).get();
 
                 var result = [];
                 angular.forEach(names, function(name) {
                     result.push(cache({name:name}).first());
                 });
                 return callback(result);
+            }
+        };
+    })
+    .factory('CardImageUrlService', function() {
+        // the getUrlFromCard is a thin wrapper around this service and
+        // the tests in filterSpec cover this service
+        return {
+            getUrl: function(card) {
+                if (!card) {
+                    return null
+                }
+                if (card.name) {
+                    var transformedName = encodeURIComponent(
+                            // split cards need to omit the ()
+                            card.name.replace(/(.+\s*\/\/\s*.+?)\s+\(.+?\)/g, '$1')
+                            // at this point, the only cards with () are flip cards
+                            // so use the left-most name; to see the flipped version
+                            // add options=rotate180
+                            .replace(/(.+?)\s*\((.+)\)/g, '$1')
+                        ).
+                        // URIencode doesn't catch apostrophe, and we want it escaped
+                        // for easier templates
+                        replace("'", '%27');
+
+                    return "http://gatherer.wizards.com/Handlers/Image.ashx?name="+transformedName+"&type=card";
+                } else {
+                    return null;
+                }
+
             }
         };
     });
