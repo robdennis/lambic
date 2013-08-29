@@ -220,9 +220,6 @@ angular.module('lambic.services', [])
 
                 if (category === 'Colorless') {
                     // special case for colorlessness
-//                    if (!card.colors) {
-//                        console.log('card missing colors: ', JSON.stringify(card))
-//                    }
                     return card.colors.length == 0;
                 }
 
@@ -712,8 +709,14 @@ angular.module('lambic.services', [])
                 // access
 
                 var result = [];
+                var fetchedCard;
                 angular.forEach(names, function(name) {
-                    result.push(cache({name:name}).first());
+                    fetchedCard = cache({name:name}).first();
+                    // this check is because first() returns false if
+                    // there's no results
+                    if (fetchedCard) {
+                        result.push(fetchedCard);
+                    }
                 });
                 return callback(result);
             }

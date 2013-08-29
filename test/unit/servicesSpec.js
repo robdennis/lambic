@@ -103,7 +103,8 @@ describe('service', function() {
             cacheService.insert([
                 divinityOfPride, damnation, damnation, dynamo, sculler, eliteVanguard, mutavault
             ]);
-            spyOn(CardCacheService, 'get_card').andCallThrough()
+            spyOn(CardCacheService, 'get_card').andCallThrough();
+            spyOn(CardCacheService, 'get_cards').andCallThrough();
 
         }));
 
@@ -134,6 +135,13 @@ describe('service', function() {
             poolService.add('UNKNOWN CARD NAME');
             expect(cacheService.get_card).toHaveBeenCalled();
             expect(poolService.get().count()).toBe(0);
+        });
+
+        it('setting an unknown name does not do anything', function() {
+            poolService.set(['UNKNOWN CARD NAME']);
+            expect(cacheService.get_cards).toHaveBeenCalled();
+            expect(poolService.get().count()).toBe(0);
+            console.log(poolService.get())
         });
 
         it('should correctly guess say what is on a pane', function() {
