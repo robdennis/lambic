@@ -35,62 +35,22 @@ angular.module('lambic.directives', []).
            templateUrl: 'partials/sidebar.html'
        }
     }).
-    directive('poolView', function(PoolService, CubeSortService) {
+    directive('cardGrid', function(CubeSortService, $rootScope) {
         return {
             restrict: 'E',
             replace: true,
+            scope: {
+                selected: '='
+            },
+
             template: "" +
-                "<div>" +
-                    '<div class="btn-group view-selection">' +
-                        '<div ng-repeat="row in categories|inSlicesOf:6">' +
-                            '<button ng-repeat="value in row" class="btn" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
-                        '</div>' +
-                    '</div>' +
-                    "<div>" +
-                        '<smart-table data="selectedCategory.value.data" display-template="template"></smart-table>' +
-                    "</div>" +
-                "</div>",
-            
-            controller: function($scope, CardImageUrlService) {
+            '<div>' +
+                '<div>' +
+                    '<smart-table data="tableData" display-template="template"></smart-table>' +
+                '</div>' +
+            '</div>',
 
-                $scope.categories = [
-                    {name: 'White', category: 'MonoWhite', active: true},
-                    {name: 'Blue', category: 'MonoBlue'},
-                    {name: 'Black', category: 'MonoBlack'},
-                    {name: 'Red', category: 'MonoRed'},
-                    {name: 'Green', category: 'MonoGreen'},
-                    {name: 'Colorless', category: 'Colorless/!Land'},
-                    {name: 'Land', category: 'Colorless/Land'},
-                    {name: 'Multicolor', category: 'Multicolor'},
-                    {name: 'White-Usable', category: 'WhiteCastable'},
-                    {name: 'Blue-Usable', category: 'BlueCastable'},
-                    {name: 'Black-Usable', category: 'BlackCastable'},
-                    {name: 'Red-Usable', category: 'RedCastable'},
-                    {name: 'Green-Usable', category: 'GreenCastable'},
-                    {name: 'Azorius-Usable', category: 'White&BlueCastable'},
-                    {name: 'Orzhov-Usable', category: 'White&BlackCastable'},
-                    {name: 'Boros-Usable', category: 'White&RedCastable'},
-                    {name: 'Selesnya-Usable', category: 'White&GreenCastable'},
-                    {name: 'Dimir-Usable', category: 'Blue&BlackCastable'},
-                    {name: 'Izzet-Usable', category: 'Blue&RedCastable'},
-                    {name: 'Simic-Usable', category: 'Blue&GreenCastable'},
-                    {name: 'Rakdos-Usable', category: 'Black&RedCastable'},
-                    {name: 'Golgari-Usable', category: 'Black&GreenCastable'},
-                    {name: 'Gruul-Usable', category: 'Red&GreenCastable'},
-                    {name: 'Bant-Usable', category: 'White&Blue&GreenCastable'},
-                    {name: 'Esper-Usable', category: 'White&Blue&BlackCastable'},
-                    {name: 'Grixis-Usable', category: 'Black&Blue&RedCastable'},
-                    {name: 'Jund-Usable', category: 'Red&Black&GreenCastable'},
-                    {name: 'Naya-Usable', category: 'White&Red&GreenCastable'},
-                    {name: 'WBR-Usable', category: 'White&Black&RedCastable'},
-                    {name: 'RUG-Usable', category: 'Red&Blue&GreenCastable'},
-                    {name: 'Junk-Usable', category: 'Black&White&GreenCastable'},
-                    {name: 'RWU-Usable', category: 'Red&White&BlueCastable'},
-                    {name: 'BUG-Usable', category: 'Bluck&Blue&GreenCastable'},
-                    {name: 'All', category: 'Any'}
-                ];
-
-                $scope.selectedCategory = {value: $scope.categories[0]};
+            controller: function($scope) {
                 var htmlTooltipTemplate = "" +
                     "<img " +
                         "id='cardview' " +
@@ -104,8 +64,10 @@ angular.module('lambic.directives', []).
                     '</div>';
 
             },
+
             link: function(scope) {
-                var spec = {
+
+                var spec = scope.selected.spec || {
                     'cmc<=1': {},
                     'cmc==2': {},
                     'cmc==3': {},
@@ -115,13 +77,52 @@ angular.module('lambic.directives', []).
                     'cmc>=7': {}
                 };
 
+                scope.$watch('selected.total', function(selected) {
+                    scope.tableData = CubeSortService.sortTable(scope.selected.total.get(), spec);
+                });
+            }
+
+        };
+    }).
+    directive('poolView', function(PoolService, CubeSortService) {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: "" +
+                "<div>" +
+                    '<div class="btn-group view-selection">' +
+                        '<div ng-repeat="row in categories|inSlicesOf:6">' +
+                            '<button ng-repeat="value in row" class="btn" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
+                        '</div>' +
+                    '</div>' +
+                    "<div>" +
+                        '<card-grid selected="selectedCategory.value"></card-grid>' +
+                    "</div>" +
+                "</div>",
+            
+            controller: function($scope) {
+
+                $scope.categories = [
+                    {name: 'White', category: 'MonoWhite', active: true},
+                    {name: 'Blue', category: 'MonoBlue'},
+                    {name: 'Black', category: 'MonoBlack'},
+                    {name: 'Red', category: 'MonoRed'},
+                    {name: 'Green', category: 'MonoGreen'},
+                    {name: 'Colorless', category: 'Colorless/!Land'},
+                    {name: 'Land', category: 'Colorless/Land'},
+                    {name: 'Multicolor', category: 'Multicolor'},
+                    {name: 'All', category: 'Any'}
+                ];
+
+                $scope.selectedCategory = {value: $scope.categories[0]};
+
+            },
+            link: function(scope) {
                 scope.$watch('pool', function(newPool) {
                     angular.forEach(scope.categories, function(category) {
-                        var totalOnPane = PoolService.filterCategory(category.category, newPool);
-                        category.total = totalOnPane;
-                        category.data = CubeSortService.sortTable(totalOnPane.get(), spec);
+                        category.total = PoolService.filterCategory(category.category, newPool);
                     });
-                })
+                });
             }
         }
     })
