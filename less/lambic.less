@@ -1,18 +1,25 @@
 @import "_elements.less";
 
 #sidebar {
-    .transition(0.4s, ease-out);
 
+    .transition(0.4s, ease-out);
+    .border-radius(4px);
+    .box-shadow(1px 2px 9px rgba(51,51,51,.2));
+
+    z-index: 300;
     position: fixed;
     left: -180px;
-    padding-left: 10px;
+    padding: 15px;
     top: 60px;
-    bottom: 10px;
     height: auto;
+    padding: 10px;
+    width: 240px;
     background: #efefef;
 
-   &:hover {
-    left: 10px;
+   &:hover,
+   &.focused {
+    left: 0px;
+    .box-shadow(1px 2px 9px rgba(51,51,51,.3));
    } 
 
 }
@@ -27,13 +34,18 @@
 }
 
 #sidebar-main {
-    
-     div, 
-     form {
-        height: 100%;
-        min-height: 100%;
-    }
+}
 
+.view-filters {
+    .view-selection {
+        margin: 0 0 15px 0;    
+    }
+}
+
+#plaintext {
+    resize: none;
+    height: 90%;
+    min-height: 90%;
 }
 
 #drill {
@@ -53,6 +65,9 @@ body {
 #content { 
     .content-header {
         height: 10%;
+        min-height: 45px;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
     .content-viewport {
@@ -91,9 +106,3 @@ div.tooltip > div.tooltip-inner {
     padding: 0;
 }
 
-#plaintext {
-    resize: none;
-    width: 93%;
-    height: 90%;
-    min-height: 90%;
-}

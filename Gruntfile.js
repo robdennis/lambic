@@ -38,11 +38,12 @@ module.exports = function (grunt) {
 					grunt.log.error('[lessc] [error] ' + err + " " + this.stdout.read());
 				});
 
-				less_comp.on('end', function (Num) {
-					grunt.log.write('[lessc] compiling: ' + file.dest);
+				less_comp.on('exit', function (Num) {
+					grunt.log.writeln('[lessc] compiling: ' + file.dest);
 
 					returns -= 1;
 					if (returns < 1) {
+						grunt.log.writeln('[lessc] compile complete.');
 						done();
 					}
 				});

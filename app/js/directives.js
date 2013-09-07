@@ -9,7 +9,7 @@ angular.module('lambic.directives', []).
                '<div id="content">' +
                    '<header></header>' +
                    '<div class="row content-viewport">' +
-                       '<div class=span10>' +
+                       '<div class="col-lg-12">' +
                            '<pool-view></pool-view>' +
                        '</div>' +
                    '</div>' +
@@ -89,7 +89,7 @@ angular.module('lambic.directives', []).
             restrict: 'E',
             replace: true,
             template: "" +
-                "<div>" +
+                "<div class='view-filters'>" +
                     '<div class="btn-toolbar view-selection">' +
                         '<div ng-repeat="row in categories|inSlicesOf:6" class="btn-group">' +
                             '<button ng-repeat="value in row" class="btn btn-default" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
@@ -136,6 +136,10 @@ angular.module('lambic.directives', []).
             },
 
             link: function(scope, element) {
+                var tdContent,
+                    classes,
+                    newElement,
+                    template;
 
                 scope.$watch('data', function() {
                     var items = [];
@@ -148,31 +152,33 @@ angular.module('lambic.directives', []).
                     scope.zipped = ZipService.longest.apply(this, items);
                 });
 
-                var classes = (scope.additionalClasses || []);
+                classes = (scope.additionalClasses || []);
                 classes.push('smart-table-cell');
 
-                var tdContent;
                 if (scope.displayTemplate) {
                     tdContent = scope.displayTemplate;
                 } else {
                     tdContent = '{{ item || "&nbsp;"}}';
                 }
 
-                var template = '' +
-                    '<table class="smart-table card-layout">' +
-                        '<tr>' +
-                            '<th ng-repeat="title in headerRow" class="smart-table-cell smart-table-header">' +
-                                '{{ title }}' +
-                            '</th>' +
-                        '</tr>' +
-                        '<tr ng-repeat="row in zipped">' +
-                            '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
-                                tdContent +
-                            '</td>' +
-                        '</tr>' +
+                template = '' +
+                    '<table class="smart-table table card-layout">' + 
+                    //'<thead>' +
+                            '<tr>' +
+                                '<th ng-repeat="title in headerRow" class="smart-table-cell smart-table-header">' +
+                                    '{{ title }}' +
+                                '</th>' +
+                            '</tr>' +
+                     //   + '</thead>' + '<tbody>' +
+                            '<tr ng-repeat="row in zipped">' +
+                                '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
+                                    tdContent +
+                                '</td>' +
+                            '</tr>' +
+                        //'</tbody>' +
                     '</table>';
 
-                var newElement = angular.element(template);
+                newElement = angular.element(template);
                 $compile(newElement)(scope);
                 element.replaceWith(newElement);
             }
