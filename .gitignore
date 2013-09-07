@@ -2,3 +2,4 @@ logs/*
 !.gitkeep
 coverage/*
 .idea/*
+node_modules
