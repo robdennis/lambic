@@ -21,3 +21,11 @@ function AppCtrl($scope,
 
     $scope.cards = CardCacheService.insert(all_cards);
 }
+
+function StaticCtrl($scope, $routeParam) {
+    console.log('e');
+   $scope.title = "Sup"; 
+
+}
+
+// StaticCtrl.$inject = ['$scope', '$routeParam'];
