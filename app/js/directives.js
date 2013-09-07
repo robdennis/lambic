@@ -6,7 +6,7 @@ angular.module('lambic.directives', []).
            restrict: 'E',
            replace: true,
            template: ''+
-               '<div id="content" class="span10 well well-large">' +
+               '<div id="content">' +
                    '<header></header>' +
                    '<div class="row content-viewport">' +
                        '<div class=span10>' +
@@ -90,9 +90,9 @@ angular.module('lambic.directives', []).
             replace: true,
             template: "" +
                 "<div>" +
-                    '<div class="btn-group view-selection">' +
-                        '<div ng-repeat="row in categories|inSlicesOf:6">' +
-                            '<button ng-repeat="value in row" class="btn" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
+                    '<div class="btn-toolbar view-selection">' +
+                        '<div ng-repeat="row in categories|inSlicesOf:6" class="btn-group">' +
+                            '<button ng-repeat="value in row" class="btn btn-default" type="button" ng-model="selectedCategory.value" btn-radio="value">{{value.name}} ({{ value.total.count() }})</button>' +
                         '</div>' +
                     '</div>' +
                     "<div>" +

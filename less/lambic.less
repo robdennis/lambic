@@ -1,13 +1,20 @@
-
-#content {
-    min-height: 100%;
-    height: 100%;
-    overflow: hidden;
-}
+@import "_elements.less";
 
 #sidebar {
-    min-height: 100%;
-    height: 100%;
+    .transition(0.4s, ease-out);
+
+    position: fixed;
+    left: -180px;
+    padding-left: 10px;
+    top: 60px;
+    bottom: 10px;
+    height: auto;
+    background: #efefef;
+
+   &:hover {
+    left: 10px;
+   } 
+
 }
 
 #sidebar-top {
@@ -19,9 +26,14 @@
     min-height: 80%;
 }
 
-#sidebar-main div, #sidebar-main form {
-    height: 100%;
-    min-height: 100%;
+#sidebar-main {
+    
+     div, 
+     form {
+        height: 100%;
+        min-height: 100%;
+    }
+
 }
 
 #drill {
@@ -35,49 +47,44 @@ body {
 }
 
 #lambic {
-    width: 100%;
+    margin-top: 55px;
 }
 
-.container,
-.row {
-    height: inherit;
+#content { 
+    .content-header {
+        height: 10%;
+    }
+
+    .content-viewport {
+        height: 90%;
+        overflow-y: auto;
+        overflow-x: inherit;
+    }
+
+    .content-viewport > div{
+        height: 100%;
+    }
 }
 
-#sidebar {
-    height: 100%;
-    min-height: 100%;
+table {
+    
+    &.card-layout {
+        width: 100%;
+        background: #fff;
+        border: 1px solid #dce1e9;
+        border-bottom: 0;
+        border-spacing: 0;
+        empty-cells: show;
+    }
+
+    &.card-layout th,
+    &.card-layout td {
+        border: 1px solid #aaaeb4;
+    }
+
 }
 
-#content .content-header {
-    height: 10%;
-}
-
-#content .content-viewport {
-    height: 90%;
-    overflow-y: auto;
-    overflow-x: inherit;
-}
-
-#content .content-viewport > div{
-    height: 100%;
-    width: 96%;
-}
-
-table.card-layout {
-    width: 100%;
-    background: #fff;
-    border: 1px solid #dce1e9;
-    border-bottom: 0;
-    border-spacing: 0;
-    empty-cells: show;
-}
-
-table.card-layout th,
-table.card-layout td {
-    border: 1px solid #aaaeb4;
-}
-
-div.tooltip > div.tooltip-inner{
+div.tooltip > div.tooltip-inner {
     border: none;
     max-height: none;
     max-width: none;
