@@ -4,6 +4,47 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+/* Sticky footer styles
+-------------------------------------------------- */
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+
+  padding: 0 0 60px;
+}
+/* Set the fixed height of the footer here */
+#footer {
+  height: 60px;
+  background-color: #f5f5f5;
+}
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+#wrap > .container {
+  padding: 60px 15px 0;
+}
+.container .credit {
+  margin: 20px 0;
+}
+#footer > .container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+code {
+  font-size: 80%;
+}
 #sidebar {
   -webkit-transition: all 0.4s ease-out;
   -moz-transition: all 0.4s ease-out;
@@ -31,11 +72,12 @@
   position: fixed;
   left: -180px;
   padding: 15px;
-  top: 60px;
-  height: auto;
+  top: 75px;
+  min-height: 300px;
   padding: 10px;
   width: 240px;
   background: #efefef;
+  border: 1px solid #dfdfdf;
 }
 #sidebar:hover,
 #sidebar.focused {
@@ -44,11 +86,7 @@
   -moz-box-shadow: 1px 2px 9px rgba(51, 51, 51, 0.3);
   box-shadow: 1px 2px 9px rgba(51, 51, 51, 0.3);
 }
-#sidebar-top {
-  height: 20%;
-}
 #sidebar-main {
-  height: 80%;
   min-height: 80%;
 }
 .view-filters .view-selection {
@@ -62,14 +100,6 @@
 #drill {
   background-color: rgba(162, 230, 169, 0.34);
 }
-body {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-}
-.main-content {
-  margin-top: 55px;
-}
 #content .content-header {
   height: 10%;
   min-height: 45px;
@@ -78,23 +108,10 @@ body {
 }
 #content .content-viewport {
   height: 90%;
-  overflow-y: auto;
-  overflow-x: inherit;
+  overflow: visible;
 }
 #content .content-viewport > div {
   height: 100%;
-}
-table.card-layout {
-  width: 100%;
-  background: #fff;
-  border: 1px solid #dce1e9;
-  border-bottom: 0;
-  border-spacing: 0;
-  empty-cells: show;
-}
-table.card-layout th,
-table.card-layout td {
-  border: 1px solid #aaaeb4;
 }
 div.tooltip > div.tooltip-inner {
   border: none;

@@ -1,4 +1,5 @@
 @import "_elements.less";
+@import "_stickyfooter.less";
 
 #sidebar {
 
@@ -10,11 +11,12 @@
     position: fixed;
     left: -180px;
     padding: 15px;
-    top: 60px;
-    height: auto;
+    top: 75px;
+    min-height: 300px;
     padding: 10px;
     width: 240px;
     background: #efefef;
+    border: 1px solid #dfdfdf;
 
    &:hover,
    &.focused {
@@ -25,11 +27,9 @@
 }
 
 #sidebar-top {
-    height: 20%;
 }
 
 #sidebar-main {
-    height: 80%;
     min-height: 80%;
 }
 
@@ -52,17 +52,10 @@
     background-color: rgba(162, 230, 169, 0.34);
 }
 
-body {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-}
-
 #lambic {
 }
 
 .main-content {
-       margin-top: 55px;
 }
 
 #content { 
@@ -75,8 +68,7 @@ body {
 
     .content-viewport {
         height: 90%;
-        overflow-y: auto;
-        overflow-x: inherit;
+        overflow: visible;
     }
 
     .content-viewport > div{
@@ -87,25 +79,21 @@ body {
 table {
     
     &.card-layout {
-        width: 100%;
-        background: #fff;
-        border: 1px solid #dce1e9;
-        border-bottom: 0;
-        border-spacing: 0;
-        empty-cells: show;
+
     }
 
     &.card-layout th,
     &.card-layout td {
-        border: 1px solid #aaaeb4;
     }
 
 }
 
-div.tooltip > div.tooltip-inner {
-    border: none;
-    max-height: none;
-    max-width: none;
-    padding: 0;
+div.tooltip {
+    & > div.tooltip-inner {
+        border: none;
+        max-height: none;
+        max-width: none;
+        padding: 0;
+    }
 }
 

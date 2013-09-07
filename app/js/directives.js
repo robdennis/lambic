@@ -20,7 +20,7 @@ angular.module('lambic.directives', []).
        return {
            restrict: 'E',
            replace: true,
-           templateUrl: 'partials/header.html',
+           templateUrl: 'partials/content-header.html',
            controller: function($scope, PoolService) {
                $scope.add = function(name) {
                    PoolService.add(name);
@@ -78,6 +78,7 @@ angular.module('lambic.directives', []).
                 };
 
                 scope.$watch('selected.total', function(selected) {
+                    console.log(scope.selected.total.get(), spec);
                     scope.tableData = CubeSortService.sortTable(scope.selected.total.get(), spec);
                 });
             }
@@ -140,6 +141,7 @@ angular.module('lambic.directives', []).
                     classes,
                     newElement,
                     template;
+                console.log(scope, element);
 
                 scope.$watch('data', function() {
                     var items = [];
@@ -162,20 +164,21 @@ angular.module('lambic.directives', []).
                 }
 
                 template = '' +
-                    '<table class="smart-table table card-layout">' + 
-                    //'<thead>' +
-                            '<tr>' +
-                                '<th ng-repeat="title in headerRow" class="smart-table-cell smart-table-header">' +
+                    '<table class="smart-table table table-striped table-hover card-layout">' + 
+                        '<thead>' +
+                            '<tr class=""></tr>' +
+                            '<tr class="smart-table-header-row">' +
+                                '<th ng-repeat="title in headerRow" class="smart-table-header-cell">' +
                                     '{{ title }}' +
                                 '</th>' +
                             '</tr>' +
-                     //   + '</thead>' + '<tbody>' +
+                       + '</thead> ' + '<tbody>' +
                             '<tr ng-repeat="row in zipped">' +
                                 '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
                                     tdContent +
                                 '</td>' +
                             '</tr>' +
-                        //'</tbody>' +
+                        '</tbody>' +
                     '</table>';
 
                 newElement = angular.element(template);

@@ -1,20 +1,15 @@
 <div id="sidebar" class="">
-    <div id="sidebar-top">
-        <div id="hierarchy">
-            <h2>Hierarchy</h2>
+        <div id="sidebar-top">
+            <div id="hierarchy">
+                <h3>Hierarchy</h3>
+            </div>
         </div>
-    </div>
-    <div id="sidebar-main">
-        <div>
+        <div id="sidebar-main">
             <form role='form'>
                 <div class='form-group'>
-                    <label for="plaintext">Create Card Pool</label>
-                    <textarea rows='20' id="plaintext" class='form-control' ng-model="plaintext"></textarea>
-                    <span>
-                        <button type="submit" class="btn btn-primary pull-right" ng-click="makePool()">Make Pool</button>
-                    </span>
+                    <textarea rows='30' id="plaintext" class='form-control' ng-model="plaintext"></textarea>
+                    <button type="submit" class="btn btn-block btn-large btn-primary " ng-click="makePool()">Make Pool</button>
                 </div>
             </form>
         </div>
-    </div>
 </div>

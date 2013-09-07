@@ -23,8 +23,6 @@ function AppCtrl($scope,
 }
 
 function StaticCtrl($scope, $routeParam) {
-    console.log('e');
-   $scope.title = "Sup"; 
 
 }
 
