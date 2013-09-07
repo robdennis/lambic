@@ -67,7 +67,7 @@ body {
   width: 100%;
   position: absolute;
 }
-#lambic {
+.main-content {
   margin-top: 55px;
 }
 #content .content-header {
