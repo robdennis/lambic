@@ -22,8 +22,11 @@ function AppCtrl($scope,
     $scope.cards = CardCacheService.insert(all_cards);
 }
 
-function StaticCtrl($scope, $routeParam) {
+function StaticCtrl($scope, $route) {}
 
+function NavCtrl($scope, $location) {
+    $scope.isActive = function (route) {
+        return route === $location.path();
+    };
 }
 
-// StaticCtrl.$inject = ['$scope', '$routeParam'];

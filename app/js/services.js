@@ -269,7 +269,6 @@ angular.module('lambic.services', [])
                         integerCMC = Number.POSITIVE_INFINITY;
                     } else {
                         integerCMC = parseInt(match[2], 10);
-                        console.log(integerCMC);
                     }
                     if (match[1] == '==') {
                         return cardCMC == integerCMC;

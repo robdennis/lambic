@@ -78,7 +78,6 @@ angular.module('lambic.directives', []).
                 };
 
                 scope.$watch('selected.total', function(selected) {
-                    console.log(scope.selected.total.get(), spec);
                     scope.tableData = CubeSortService.sortTable(scope.selected.total.get(), spec);
                 });
             }
@@ -141,7 +140,6 @@ angular.module('lambic.directives', []).
                     classes,
                     newElement,
                     template;
-                console.log(scope, element);
 
                 scope.$watch('data', function() {
                     var items = [];
