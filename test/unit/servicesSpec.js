@@ -142,7 +142,6 @@ describe('service', function() {
             poolService.set(['UNKNOWN CARD NAME']);
             expect(cacheService.get_cards).toHaveBeenCalled();
             expect(poolService.get().count()).toBe(0);
-            console.log(poolService.get())
         });
 
         it('should correctly guess say what is on a pane', function() {
