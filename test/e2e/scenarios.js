@@ -32,7 +32,7 @@ describe('lambic e2e tests', function() {
             expect(repeater('.smart-table').count()).toEqual(1);
 
             // White has 7 columns in both
-            expect(repeater('.smart-table-header').count()).toEqual(7);
+            expect(repeater('.smart-table-header-cell').count()).toEqual(7);
 
             // and one row to start in both
             expect(repeater('table.card-layout tr').count()).toEqual(1);
@@ -44,13 +44,13 @@ describe('lambic e2e tests', function() {
 describe('lambic static tests', function () {
 
     beforeEach(function () {
-        browser().navigateTo('../../app/index.html#/about');
+        browser().navigateTo('../../app/index.html#/help');
     });
 
     describe('View about page', function () {
 
         it('should navigate to the about page', function () {
-            expect(element('h1').text()).toEqual('About');
+            expect(element('h1').text()).toEqual('Help');
         });
 
     })
