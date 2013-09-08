@@ -26,8 +26,8 @@ def _query_tutor(command_parameters):
     try:
         return json.loads(subprocess.check_output(command).strip())
     except (subprocess.CalledProcessError, ValueError) as e:
-        raise subprocess.CalledProcessError('problem with command',
-                                            ' '.join(command))
+        logging.warning('problem with command: {}'.format(command))
+        return []
 
 
 def _query_tutor_for_cards_by_set(set_name):
