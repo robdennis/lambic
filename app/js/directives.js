@@ -169,7 +169,7 @@ angular.module('lambic.directives', []).
                                     '{{ title }}' +
                                 '</th>' +
                             '</tr>' +
-                       + '</thead> ' + '<tbody>' +
+                       '</thead> ' + '<tbody>' +
                             '<tr ng-repeat="row in zipped">' +
                                 '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
                                     tdContent +
