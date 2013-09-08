@@ -162,9 +162,8 @@ angular.module('lambic.directives', []).
                 }
 
                 template = '' +
-                    '<table class="smart-table table table-striped table-hover card-layout">' + 
+                    '<table class="smart-table table table-striped table-hover card-layout">' +
                         '<thead>' +
-//                            '<tr class=""></tr>' +
                             '<tr class="smart-table-header-row">' +
                                 '<th ng-repeat="title in headerRow" class="smart-table-header-cell">' +
                                     '{{ title }}' +
