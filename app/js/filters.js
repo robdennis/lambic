@@ -7,24 +7,39 @@ angular.module('lambic.filters', ['lambic.services']).
         ['$rootScope',
             function($rootScope) {
                 return function(items, count) {
-                    if (!count)
+
+                    if (!count) {
                         count = 1;
+                    }
 
-                    if (!angular.isArray(items) && !angular.isString(items)) return items;
+                    if (!angular.isArray(items) && !angular.isString(items)) {
+                        return items;
+                    }
 
-                    var array = [];
-                    for (var i = 0; i < items.length; i++) {
-                        var chunkIndex = parseInt(i / count, 10);
-                        var isFirst = (i % count === 0);
-                        if (isFirst)
+                    var array = [], i, im, isFirst, chunkIndex;
+
+                    for (i = 0, im = items.length; i < im; i++) {
+
+                        chunkIndex = parseInt(i / count, 10);
+                        
+                        isFirst = (i % count === 0);
+
+                        if (isFirst) {
                             array[chunkIndex] = [];
+                        }
+
                         array[chunkIndex].push(items[i]);
                     }
 
-                    if (angular.equals($rootScope.arrayinSliceOf, array))
+                    if (angular.equals($rootScope.arrayinSliceOf, array)) {
+
                         return $rootScope.arrayinSliceOf;
-                    else
+
+                    } else {
+
                         $rootScope.arrayinSliceOf = array;
+
+                    }
 
                     return array;
                 };

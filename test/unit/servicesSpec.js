@@ -62,7 +62,7 @@ describe('service', function() {
 
     var eliteVanguard, karn, dynamo, sculler, damnation,
         emrakul, devilsPlay, souls, legionnaire, nephilim, sliverQueen,
-        wwwww, ultimatum, divinityOfPride, mutavault;
+        wwwww, ultimatum, divinityOfPride, mutavault, ulamog;
 
 
 
@@ -82,6 +82,7 @@ describe('service', function() {
         sculler = cubeContents['Tidehollow Sculler'];
         damnation = cubeContents['Damnation'];
         emrakul = cubeContents['Emrakul, the Aeons Torn'];
+        ulamog = cubeContents['Ulamog, the Infinite Gyre'];
         devilsPlay = cubeContents["Devil's Play"];
         souls = cubeContents["Lingering Souls"];
         legionnaire = cubeContents["Porcelain Legionnaire"];
@@ -141,7 +142,6 @@ describe('service', function() {
             poolService.set(['UNKNOWN CARD NAME']);
             expect(cacheService.get_cards).toHaveBeenCalled();
             expect(poolService.get().count()).toBe(0);
-            console.log(poolService.get())
         });
 
         it('should correctly guess say what is on a pane', function() {
@@ -281,9 +281,10 @@ describe('service', function() {
             this.addMatchers({
                 toMatchCategory: function(category) {
                     var card = this.actual;
+                    var notText = this.isNot ? " not" : "";
 
                     this.message = function() {
-                        return 'expected '+card.name+' to match '+category;
+                        return 'expected '+card.name + notText + ' to match '+category;
                     };
                     return svc.matchesCategory(category, card);
                 }
@@ -442,6 +443,13 @@ describe('service', function() {
                 expect(emrakul).not.toMatchCategory(cmc + '<3');
             })
         });
+
+//        it('should handle cmc>9 - see #5', function() {
+//            // issue #5 - this is what it should be, but will fail if uncommented
+//            expect(emrakul).toMatchCategory(cmc + '>=7');
+//            expect(ulamog).toMatchCategory(cmc + '>=7');
+//            expect(ulamog).not.toMatchCategory(cmc + '==2');
+//        });
 
         it('should handle the color castability case', function() {
             expect(eliteVanguard).toMatchCategory('WhiteCastable');

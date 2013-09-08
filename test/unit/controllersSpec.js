@@ -3,6 +3,11 @@
 /* jasmine specs for controllers go here */
 
 describe('controllers', function(){
-  beforeEach(module('lambic.controllers'));
+	
+  	beforeEach(module('lambic.controllers'));
 
+	describe('StaticCtrl', function() {
+
+	});
 });
+

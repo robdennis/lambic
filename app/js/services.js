@@ -268,7 +268,7 @@ angular.module('lambic.services', [])
                     if (match[2]=='X') {
                         integerCMC = Number.POSITIVE_INFINITY;
                     } else {
-                        integerCMC = parseInt(match[2]);
+                        integerCMC = parseInt(match[2], 10);
                     }
                     if (match[1] == '==') {
                         return cardCMC == integerCMC;
@@ -406,7 +406,7 @@ angular.module('lambic.services', [])
                         if (match) {
                             // there are potentially multiples in match[1]
                             // assume that's the case
-                            for (var i=0;i<parseInt(match[1] || "1");i++) {
+                            for (var i=0;i<parseInt(match[1] || 1, 10);i++) {
                                 names.push(trim(match[2]))
                             }
                         } else {
