@@ -1,18 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" ng-app="lambic">
 <head>
     <meta charset="utf-8">
     <title>Lambic</title>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/lambic.css"/>
 </head>
 <body>
-<div id="lambic" class="container" ng-controller="AppCtrl">
-    <div class="row">
-        <sidebar></sidebar>
-        <main></main>
-    </div>
+ <div id="wrap">
+
+	<div id='navigation' ng-include="'/partials/nav.html'"></div>
+	<div class='main-content container' ng-view></div>
+
 </div>
+
+<div id='footer' ng-include="'/partials/footer.html'"></div>	
 
 <script src="lib/angular/angular.js"></script>
 <script src="js/app.js"></script>

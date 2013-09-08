@@ -1,15 +1,15 @@
-<div id="sidebar" class="span2 well well-large">
-    <div class="row" id="sidebar-top">
-        <div class="span2" id="hierarchy">
-            hierarchy
+<div id="sidebar" class="">
+        <div id="sidebar-top">
+            <div id="hierarchy">
+                <h3>Hierarchy</h3>
+            </div>
         </div>
-    </div>
-    <div class="row" id=sidebar-main>
-        <div class="span2">
-            <form>
-                <textarea id="plaintext" ng-model="plaintext"></textarea>
-                <button type="submit" class="btn" ng-click="makePool()">Make Pool</button>
+        <div id="sidebar-main">
+            <form role='form'>
+                <div class='form-group'>
+                    <textarea rows='30' id="plaintext" class='form-control' ng-model="plaintext"></textarea>
+                    <button type="submit" class="btn btn-block btn-large btn-primary " ng-click="makePool()">Make Pool</button>
+                </div>
             </form>
         </div>
-    </div>
 </div>

@@ -14,9 +14,11 @@ describe('lambic e2e tests', function() {
     });
 
     describe('on load appearance', function() {
+
         it('should have some number of of tabs', function() {
             expect(repeater('.view-selection button').count()).toBeGreaterThan(0);
         });
+
         it("should default to the White tab, and we can add to it", function() {
             var navBar = '.view-selection button.active';
             expect(repeater(navBar).count()).toEqual(1);
@@ -35,6 +37,22 @@ describe('lambic e2e tests', function() {
             // and one row to start in both
             expect(repeater('table.card-layout tr').count()).toEqual(1);
         });
+    })
+
+});
+
+describe('lambic static tests', function () {
+
+    beforeEach(function () {
+        browser().navigateTo('../../app/index.html#/about');
+    });
+
+    describe('View about page', function () {
+
+        it('should navigate to the about page', function () {
+            expect(element('h1').text()).toEqual('About');
+        });
+
     })
 
 });
