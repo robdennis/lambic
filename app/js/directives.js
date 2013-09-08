@@ -35,7 +35,7 @@ angular.module('lambic.directives', []).
            templateUrl: 'partials/sidebar.html'
        }
     }).
-    directive('cardGrid', function(CubeSortService, $rootScope) {
+    directive('cardGrid', function(CubeSortService) {
         return {
             restrict: 'E',
             replace: true,
@@ -77,14 +77,14 @@ angular.module('lambic.directives', []).
                     'cmc>=7': {}
                 };
 
-                scope.$watch('selected.total', function(selected) {
+                scope.$watch('selected.total', function() {
                     scope.tableData = CubeSortService.sortTable(scope.selected.total.get(), spec);
                 });
             }
 
         };
     }).
-    directive('poolView', function(PoolService, CubeSortService) {
+    directive('poolView', function(PoolService) {
         return {
             restrict: 'E',
             replace: true,
@@ -164,7 +164,7 @@ angular.module('lambic.directives', []).
                 template = '' +
                     '<table class="smart-table table table-striped table-hover card-layout">' + 
                         '<thead>' +
-                            '<tr class=""></tr>' +
+//                            '<tr class=""></tr>' +
                             '<tr class="smart-table-header-row">' +
                                 '<th ng-repeat="title in headerRow" class="smart-table-header-cell">' +
                                     '{{ title }}' +
