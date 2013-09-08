@@ -7,4 +7,17 @@ angular.module('lambic', [
     'lambic.directives',
     'lambic.controllers',
     'ui.bootstrap'
-]);
+]).config(['$routeProvider', function ($routeProvider) {
+
+	$routeProvider.
+		when('/', {
+			templateUrl: 'partials/lambic.html',
+			controller: AppCtrl
+		}).
+		when('/help', {
+			templateUrl: 'partials/help.html',
+			controller: StaticCtrl
+		}).
+		otherwise({redirectTo: '/'});
+
+}]);
