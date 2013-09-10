@@ -1,3 +1,5 @@
+var util = require('./lib/grunt/utils.js');
+
 module.exports = function (grunt) {
 
 	// libraries
@@ -7,6 +9,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-conventional-changelog');
 
 	grunt.loadNpmTasks('grunt-karma');
@@ -54,6 +57,26 @@ module.exports = function (grunt) {
 			}
 		},
 
+		connect: {
+			devserver: {
+
+				options: {
+					port: 8000,
+					hostname: '0.0.0.0',
+					base: '.',
+					keepalive: true,
+					middleware: function(connect, options){
+						return [
+			              util.rewrite(),
+			              connect.favicon('images/favicon.ico'),
+			              connect.static(options.base),
+			              connect.directory(options.base)
+		              ];
+		          }
+		      }
+		  }
+		}
+
 	};
 
 	grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
@@ -64,4 +87,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('test', ['karma']);
 
 	grunt.registerTask('build', ['changelog']);
+	
+	grunt.registerTask('webserver', ['connect:devserver']);
+
 }
