@@ -21,11 +21,8 @@ module.exports = function (grunt) {
 				}
 			},
 			files: {
-				cwd: "less/",
-				expand: true,
-				src: ["**/*.less"],
-				dest: "app/css/",
-				ext: ".css",
+				src: ["less/**/*.less"],
+				dest: "app/css/lambic.css"
 			}
 		},
 
