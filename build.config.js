@@ -4,6 +4,7 @@
 module.exports = {
 
 	build_dir: 'build',
+	config_dir: 'config',
 
 	app_files: {
 

@@ -7,6 +7,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-conventional-changelog');
+
+	grunt.loadNpmTasks('grunt-karma');
 
 	var userConfig = require('./build.config.js');
 	
@@ -14,28 +17,33 @@ module.exports = function (grunt) {
 
 		pkg: grunt.file.readJSON('package.json'),
 
+
 		less: {
-			options: {
-				globals: {
-					cool: "beans"
-				}
-			},
 			files: {
-				src: ["less/**/*.less"],
+				src: ['less/**/*.less'],
 				dest: "app/css/lambic.css"
 			}
 		},
 
+
 		watch: {
 			less: {
-				files: ["less/**/*"],
+				files: ['less/**/*'],
 				tasks: ['less']
 			}
 		},
 
+
+		changelog: {
+			options: {
+				dest: 'CHANGELOG.md',
+			}
+		},
+
+
 		karma: {
 			options: {
-				configFile: '<%= build_dir %>/karma-unit.js'
+				configFile: '<%= config_dir %>/karma-unit.js'
 			},
 			unit: {
 				runnerPort: 9101,
@@ -48,9 +56,12 @@ module.exports = function (grunt) {
 
 	};
 
-  	grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
+	grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
 
 	// composite tasks
 	grunt.registerTask('default', ['less']);
 
+	grunt.registerTask('test', ['karma']);
+
+	grunt.registerTask('build', ['changelog']);
 }
