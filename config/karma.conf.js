@@ -35,3 +35,16 @@ junitReporter = {
   outputFile: 'test_out/unit.xml',
   suite: 'unit'
 };
+
+module.exports = function(config) {
+  config.set({
+    basePath: basePath,
+    frameworks: frameworks,
+    files: files,
+    autoWatch: false,
+    browser: browsers,
+    reporters: reporters,
+    preprocessors: preprocessors,
+    junitReporter: junitReporter
+  });
+};
