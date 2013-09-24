@@ -359,6 +359,7 @@ angular.module('lambic.services', [])
                             // or True/False if it is applicable and based on the results of
                             // the check
                         ], function(checker) {
+                            // if we ever brought in jQuery, their each can short-circuit, which is better
                             if (!shouldContinueChecking) {
                                 return;
                             }
@@ -682,12 +683,11 @@ angular.module('lambic.services', [])
                     }
                 };
 
-                if (value instanceof Array) {
-                    angular.forEach(value, insertModified)
-                } else {
-                    insertModified(value);
+                if (value.name) {
+                    // sanity check for inserting a single card
+                    value = [value]
                 }
-
+                angular.forEach(value, insertModified);
 
                 return cache();
             },

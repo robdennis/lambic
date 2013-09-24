@@ -14,13 +14,22 @@ def write_subset_of_cards_to_file(all_cards):
     )
 
     # this "dict-comprehension" has the beneficial side-effect of de-duping
-    cards = (
-        dict((k, card[k]) for k in card.iterkeys() if k in whitelist)
-        for card in all_cards.itervalues()
+    # cards = (
+    #     dict((k, card[k]) for k in card.iterkeys() if k in whitelist)
+    #     for card in all_cards.itervalues()
+    # )
+    def as_dict(card):
+        return dict(
+            [(k, card[k]) for k in card if k in whitelist]
+        )
+
+    cards = dict(
+        (card['name'], as_dict(card)) for card in all_cards.itervalues()
     )
 
+
     with open(ALL_CARDS, 'wb') as all_cards:
-        all_cards.write('all_cards = %s;' % json.dumps(list(cards)))
+        all_cards.write('all_cards = %s;' % json.dumps(cards))
 
 if __name__ == '__main__':
     write_subset_of_cards_to_file(json.load(open(CARDS_JSON)))
