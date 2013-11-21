@@ -58,43 +58,10 @@ var getValues = function(someArray, key) {
 };
 
 describe('service', function() {
-    var cubeContents;
-
-    var eliteVanguard, karn, dynamo, sculler, damnation,
-        emrakul, devilsPlay, souls, legionnaire, nephilim, sliverQueen,
-        wwwww, ultimatum, divinityOfPride, mutavault, ulamog;
-
-
 
     beforeEach(function() {
         module('lambic.services');
     });
-
-    beforeEach(inject(function(CardCacheService) {
-        cubeContents = {};
-        angular.forEach(all_cards, function(card) {
-            cubeContents[card.name] = CardCacheService.onInsert(card);
-        });
-
-        eliteVanguard = cubeContents['Elite Vanguard'];
-        karn = cubeContents['Karn Liberated'];
-        dynamo = cubeContents['Thran Dynamo'];
-        sculler = cubeContents['Tidehollow Sculler'];
-        damnation = cubeContents['Damnation'];
-        emrakul = cubeContents['Emrakul, the Aeons Torn'];
-        ulamog = cubeContents['Ulamog, the Infinite Gyre'];
-        devilsPlay = cubeContents["Devil's Play"];
-        souls = cubeContents["Lingering Souls"];
-        legionnaire = cubeContents["Porcelain Legionnaire"];
-        nephilim = cubeContents['Witch-Maw Nephilim'];
-        sliverQueen = cubeContents['Sliver Queen'];
-        wwwww = cubeContents['Who/What/When/Where/Why'];
-        ultimatum = cubeContents['Cruel Ultimatum'];
-        divinityOfPride = cubeContents['Divinity of Pride'];
-        mutavault = cubeContents['Mutavault'];
-
-    }));
-
 
     describe('PoolService', function() {
         var poolService, cacheService;
@@ -102,7 +69,12 @@ describe('service', function() {
             poolService = PoolService;
             cacheService = CardCacheService;
             cacheService.insert([
-                divinityOfPride, damnation, damnation, dynamo, sculler, eliteVanguard, mutavault
+                all_cards['Divinity of Pride'],
+                all_cards['Damnation'],
+                all_cards['Thran Dynamo'],
+                all_cards['Tidehollow Sculler'],
+                all_cards['Elite Vanguard'],
+                all_cards['Mutavault']
             ]);
             spyOn(CardCacheService, 'get_card').andCallThrough();
             spyOn(CardCacheService, 'get_cards').andCallThrough();
@@ -120,10 +92,6 @@ describe('service', function() {
                     return results.length === count;
                 }
             })
-        });
-
-        afterEach(function() {
-           cacheService.get().remove()
         });
 
         it('adding a name puts it in the cache', function() {
@@ -144,7 +112,7 @@ describe('service', function() {
             expect(poolService.get().count()).toBe(0);
         });
 
-        it('should correctly guess say what is on a pane', function() {
+        it('should correctly guess what is on a pane', function() {
             poolService.addMany([
                 'Damnation',
                 'Divinity of Pride',
@@ -261,19 +229,50 @@ describe('service', function() {
         });
 
         it('should correctly estimate colors from a mana cost', function() {
-            expect(eliteVanguard).toMatchColors(['White'])
+            expect(all_cards['Elite Vanguard']).toMatchColors(['White']);
+            expect(all_cards['Reaper King']).toMatchColors(['White', 'Blue', 'Black', 'Red', 'Green']);
+            expect(all_cards['Slave of Bolas']).toMatchColors(['Blue', 'Black', 'Red']);
         });
     });
 
     describe("cardCategoryServiceTest", function() {
-        var svc, heuristicsSvc;
+        var svc, heuristicsSvc, cacheSvc, getModded;
 
+        var eliteVanguard, karn, dynamo, sculler, damnation,
+            emrakul, devilsPlay, souls, legionnaire, nephilim, sliverQueen,
+            wwwww, ultimatum, divinityOfPride, mutavault, ulamog;
 
         beforeEach(inject(function ($injector,
                                     CardCategoryService,
-                                    HeuristicService) {
+                                    HeuristicService, 
+                                    CardCacheService) {
             svc = CardCategoryService;
             heuristicsSvc = HeuristicService;
+            cacheSvc = CardCacheService;
+
+            // there are certain attributes that are constructed on insert
+            // we should repeat that here to ensure that our cards have
+            // the proper things to sort on
+            getModded = function(name) {
+                return cacheSvc.onInsert(all_cards[name]);
+            };
+            
+            eliteVanguard = getModded('Elite Vanguard');
+            karn = getModded('Karn Liberated');
+            dynamo = getModded('Thran Dynamo');
+            sculler = getModded('Tidehollow Sculler');
+            damnation = getModded('Damnation');
+            emrakul = getModded('Emrakul, the Aeons Torn');
+            ulamog = getModded('Ulamog, the Infinite Gyre');
+            devilsPlay = getModded("Devil's Play");
+            souls = getModded("Lingering Souls");
+            legionnaire = getModded("Porcelain Legionnaire");
+            nephilim = getModded('Witch-Maw Nephilim');
+            sliverQueen = getModded('Sliver Queen');
+            wwwww = getModded('Who/What/When/Where/Why');
+            ultimatum = getModded('Cruel Ultimatum');
+            divinityOfPride = getModded('Divinity of Pride');
+            mutavault = getModded('Mutavault');
 
         }));
 
@@ -444,12 +443,14 @@ describe('service', function() {
             })
         });
 
-//        it('should handle cmc>9 - see #5', function() {
-//            // issue #5 - this is what it should be, but will fail if uncommented
-//            expect(emrakul).toMatchCategory(cmc + '>=7');
-//            expect(ulamog).toMatchCategory(cmc + '>=7');
-//            expect(ulamog).not.toMatchCategory(cmc + '==2');
-//        });
+        it('should handle cmc>9 - see #5', function() {
+            // issue #5
+            expect(emrakul).toMatchCategory('cmc>=7');
+            expect(emrakul).toMatchCategory('cmc==15');
+            expect(ulamog).toMatchCategory('cmc>=7');
+            expect(ulamog).toMatchCategory('cmc==11');
+            expect(ulamog).not.toMatchCategory('cmc==2');
+        });
 
         it('should handle the color castability case', function() {
             expect(eliteVanguard).toMatchCategory('WhiteCastable');
@@ -527,25 +528,34 @@ describe('service', function() {
 
     describe("cubeSortServiceTest", function() {
         var svc;
+        var baseCube;
 
-        beforeEach(inject(function ($injector, CubeSortService) {
+        beforeEach(inject(function ($injector, CubeSortService, CardCacheService) {
             svc = CubeSortService;
+
+            baseCube = [];
+
+            angular.forEach([
+                'Damnation',
+                'Vampiric Tutor',
+                'Doom Blade',
+                'Karn Liberated',
+                'Thran Dynamo',
+                'Wasteland',
+                'Tidehollow Sculler',
+                'Liliana of the Veil',
+                'Sorin Markov',
+                'Sphinx of the Steel Wind'
+            ], function(card) {
+                baseCube.push(CardCacheService.onInsert(all_cards[card]))
+            });
         }));
 
         it('should sort with all the supported categories', function() {
 
-            var baseCube = [
-                cubeContents['Damnation'],
-                cubeContents['Vampiric Tutor'],
-                cubeContents['Doom Blade'],
-                cubeContents['Karn Liberated'],
-                cubeContents['Thran Dynamo'],
-                cubeContents['Wasteland'],
-                cubeContents['Tidehollow Sculler'],
-                cubeContents['Liliana of the Veil'],
-                cubeContents['Sorin Markov'],
-                cubeContents['Sphinx of the Steel Wind']
-            ];
+            angular.forEach(baseCube, function(card) {
+               expect(card).not.toBeFalsy();
+            });
 
             var sortedCube = svc.sortCube(baseCube, {
                 'Multicolor': {
