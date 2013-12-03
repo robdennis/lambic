@@ -6,7 +6,8 @@ angular.module('lambic', [
     'lambic.services',
     'lambic.directives',
     'lambic.controllers',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngRoute'
 ]).config(['$routeProvider', function ($routeProvider) {
 
 	$routeProvider.
