@@ -4,7 +4,8 @@
   "dependencies": {
     "angular": "~1.2.0",
     "angular-bootstrap": "~0.7.0",
-    "angular-route": "~1.2.3"
+    "angular-route": "~1.2.3",
+    "taffydb": "https://github.com/typicaljoe/taffydb/archive/master.zip"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",
