@@ -19,7 +19,9 @@
   "description": "angular widgets for building a M:TG deck",
   "main": [
     "dist/lambic.min.js",
-    "dist/lambic.min.css"
+    "dist/lambic.js",
+    "dist/lambic.min.css",
+    "dist/lambic.css"
   ],
   "license": "MIT",
   "ignore": [
