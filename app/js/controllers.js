@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('lambic.controllers', []);
+angular.module('lambic.controllers', ['lambic.services', 'angular-onbeforeunload']);
 
 function AppCtrl($scope,
                  PoolService,
@@ -22,11 +22,15 @@ function AppCtrl($scope,
     $scope.cards = CardCacheService.insert(all_cards);
 
     // https://github.com/gdi2290/angular-beforeunload
-    var beforeUnload = $scope.$on('$locationChangeStart',
-        onBeforeUnload.init(
-            'Are you sure you want to leave?',
-            'Copy your pool on the left if you want to save it for later'
-        ));
+    var beforeUnload = $scope.$on('$locationChangeStart', function() {
+        if ($scope.plaintext) {
+            onBeforeUnload.init(
+                'Are you sure you want to leave?',
+                'Copy your pool on the left if you want to save it for later'
+            );
+        }
+    });
+
     $scope.submitPage = function() {
         // If you invoking your reference then your listener becomes null.
         beforeUnload();
