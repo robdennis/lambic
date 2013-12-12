@@ -7,7 +7,8 @@ angular.module('lambic', [
     'lambic.directives',
     'lambic.controllers',
     'ui.bootstrap',
-    'ngRoute'
+    'ngRoute',
+    'angular-onbeforeunload'
 ]).config(['$routeProvider', function ($routeProvider) {
 
 	$routeProvider.
@@ -21,4 +22,4 @@ angular.module('lambic', [
 		}).
 		otherwise({redirectTo: '/'});
 
-}]);
+    }]);
