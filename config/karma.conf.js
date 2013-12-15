@@ -1,37 +1,53 @@
-basePath = '../';
+// Karma configuration
+// http://karma-runner.github.io/0.10/config/configuration-file.html
 
-files = [
-  JASMINE,
-  JASMINE_ADAPTER,
-  'app/lib/angular/angular.js',
-  'app/lib/angular/angular-*.js',
-  'test/lib/angular/angular-mocks.js',
-  'app/js/**/*.js',
-  'test/unit/**/*.js'
-];
+module.exports = function(config) {
+  config.set({
+    // base path, that will be used to resolve files and exclude
+    basePath: '..',
 
-autoWatch = true;
+    // testing framework to use (jasmine/mocha/qunit/...)
+    frameworks: ['jasmine'],
 
-browsers = ['Chrome', 'Firefox', 'Safari'];
+    // list of files / patterns to load in the browser
+    files: [
 
-reporters = ['progress', 'coverage'];
+      'bower_components/angular/angular.js',
+      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/taffydb/taffy.js',
+      'bower_components/angular-beforeunload/*.js',
+      'app/js/**/*.js',
+      'test/unit/**/*.js'
+    ],
 
-//coverage reporter type
-coverageReporter = {
-    dir: 'coverage',
-    type : 'html'
-};
+    // list of files / patterns to exclude
+    exclude: [],
 
-//initiate istanbul code coverage report
-preprocessors = {
-    'app/js/app.js': 'coverage',
-    'app/js/controllers.js': 'coverage',
-    'app/js/directives.js': 'coverage',
-    'app/js/filters.js': 'coverage',
-    'app/js/services.js': 'coverage'
-};
+    // web server port
+    port: 8080,
 
-junitReporter = {
-  outputFile: 'test_out/unit.xml',
-  suite: 'unit'
+    // level of logging
+    // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
+    logLevel: config.LOG_DEBUG,
+
+
+    // enable / disable watching file and executing tests whenever any file changes
+    autoWatch: true,
+
+
+    // Start these browsers, currently available:
+    // - Chrome
+    // - ChromeCanary
+    // - Firefox
+    // - Opera
+    // - Safari (only Mac)
+    // - PhantomJS
+    // - IE (only Windows)
+    browsers: ['Chrome', 'Firefox'],
+
+
+    // Continuous Integration mode
+    // if true, it capture browsers, run tests and exit
+    singleRun: false
+  });
 };

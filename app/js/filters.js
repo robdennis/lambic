@@ -49,6 +49,14 @@ angular.module('lambic.filters', ['lambic.services']).
         ['CardImageUrlService',
             function(CardImageUrlService) {
                 return function(item) {
-                    return CardImageUrlService.getUrl(item);
+                    return CardImageUrlService.getCardImageUrl(item);
                 };
-            }]);
+            }]
+    ).filter('manaSymbolsAsImages',
+        ['CardImageUrlService', '$sce',
+            function(CardImageUrlService, $sce) {
+                return function(item) {
+                    return CardImageUrlService.getManaUrls(item);
+                };
+            }]
+    );

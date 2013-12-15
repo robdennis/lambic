@@ -171,7 +171,7 @@ angular.module('lambic.directives', []).
                             '</tr>' +
                        '</thead> ' + '<tbody>' +
                             '<tr ng-repeat="row in zipped">' +
-                                '<td ng-repeat="item in row" class="'+classes.join(' ')+'">' +
+                                '<td ng-repeat="item in row track by $index" class="'+classes.join(' ')+'">' +
                                     tdContent +
                                 '</td>' +
                             '</tr>' +

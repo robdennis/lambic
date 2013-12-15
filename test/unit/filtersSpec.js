@@ -2,7 +2,7 @@
 
 /* jasmine specs for filters go here */
 
-describe('filter', function($filter) {
+describe('filter', function() {
     beforeEach(module('lambic.filters'));
 
     describe('inSlicesOf', function() {
@@ -32,7 +32,7 @@ describe('filter', function($filter) {
         );
     });
 
-    describe('inSlicesOf', function() {
+    describe('getUrlFromCard', function() {
         var getUrlFromCard;
         beforeEach(inject(function(getUrlFromCardFilter) {
             getUrlFromCard = getUrlFromCardFilter;
@@ -73,4 +73,49 @@ describe('filter', function($filter) {
         });
     });
 
+    describe('manaSymbolsAsImages', function() {
+        var manaImages;
+        beforeEach(inject(function(manaSymbolsAsImagesFilter) {
+            manaImages = manaSymbolsAsImagesFilter;
+        }));
+
+        var templatedUrl = function(name) {
+            return "http://gatherer.wizards.com/Handlers/Image.ashx?" +
+                "size=small&" +
+                "type=symbol&" +
+                "name=" + name;
+        };
+
+        it('should correctly handle bad data', function() {
+            expect(manaImages('')).toEqual([]);
+            expect(manaImages(null)).toEqual([]);
+            expect(manaImages(undefined)).toEqual([]);
+            expect(manaImages('XRR')).toEqual([]);
+        });
+
+        it('handles numbers', function() {
+            expect(manaImages('{15}')).toEqual([templatedUrl('15')]);
+            expect(manaImages('{6}')).toEqual([templatedUrl('6')]);
+            expect(manaImages('{0}')).toEqual([templatedUrl('0')]);
+        });
+
+        it('handles hybrids and phyrexian', function() {
+            expect(manaImages('{2}{2/R}')).toEqual([
+                templatedUrl('2'), templatedUrl('2R')]);
+            expect(manaImages('{U/R}{U/G}')).toEqual([
+                templatedUrl('UR'), templatedUrl('UG')]);
+            expect(manaImages('{U/P}{R/P}')).toEqual([
+                templatedUrl('UP'), templatedUrl('RP')]);
+        });
+
+        it('handles X spells', function() {
+            expect(manaImages('{X}{X}{R}')).toEqual([
+                templatedUrl('X'), templatedUrl('X'), templatedUrl('R')]);
+        });
+
+        it("passes through what is parsed, only removing slashes", function() {
+            expect(manaImages('{nonexistent}{r}')).toEqual([
+                templatedUrl('nonexistent'), templatedUrl('r')]);
+        });
+    })
 });
