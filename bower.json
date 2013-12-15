@@ -1,34 +1,42 @@
 {
-    "name": "lambic",
-    "version": "0.1.0",
-    "dependencies": {
-        "taffydb": "https://github.com/typicaljoe/taffydb/archive/master.zip",
-        "angular-beforeunload": "~0.0.1"
-    },
-    "homepage": "https://github.com/robdennis/lambic",
-    "authors": [
-        "Rob Dennis <rdennis+lambic@gmail.com>"
-    ],
-    "description": "angular widgets for building a M:TG deck",
-    "main": [
-        "dist/lambic.min.js",
-        "dist/lambic.js",
-        "dist/lambic.min.css",
-        "dist/lambic.css"
-    ],
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "app/bower_components",
-        "test",
-        "scripts",
-        "mockups",
-        "logs",
-        "lib",
-        "less",
-        "config",
-        "app"
-    ]
+  "name": "lambic",
+  "version": "0.1.0",
+  "dependencies": {
+    "angular": "~1.2.0",
+    "angular-bootstrap": "~0.7.0",
+    "angular-route": "~1.2.3",
+    "taffydb": "https://github.com/typicaljoe/taffydb/archive/master.zip",
+    "bootstrap": "~3.0.3",
+    "angular-beforeunload": "~0.0.1"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.2.0",
+    "angular-scenario": "~1.2.0"
+  },
+  "homepage": "https://github.com/robdennis/lambic",
+  "authors": [
+    "Rob Dennis <rdennis+lambic@gmail.com>"
+  ],
+  "description": "angular widgets for building a M:TG deck",
+  "main": [
+    "dist/lambic.min.js",
+    "dist/lambic.js",
+    "dist/lambic.min.css",
+    "dist/lambic.css"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "scripts",
+    "mockups",
+    "logs",
+    "lib",
+    "less",
+    "config",
+    "app"
+  ]
 }
