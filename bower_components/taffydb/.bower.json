@@ -1,0 +1,11 @@
+{
+  "name": "taffydb",
+  "_cacheHeaders": {
+    "Content-Length": "25908",
+    "Content-Type": "application/zip",
+    "Content-Disposition": "attachment; filename=taffydb-master.zip"
+  },
+  "_source": "https://github.com/typicaljoe/taffydb/archive/master.zip",
+  "_target": "*",
+  "_originalSource": "https://github.com/typicaljoe/taffydb/archive/master.zip"
+}
