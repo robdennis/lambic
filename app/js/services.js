@@ -49,6 +49,14 @@ angular.module('lambic.services', [])
             typeList: function() {
                 return ['Artifact', 'Creature', 'Enchantment', 'Instant',
                         'Land', 'Planeswalker', 'Sorcery', 'Tribal'];
+            },
+            splitManaCost: function(manaCost) {
+                // split a mana cost of the form "{U}{2/W}{X}" to an array of ["U", "2/W", "X"]
+                if (!manaCost || manaCost.charAt(0) != '{' ||
+                        manaCost.charAt(manaCost.length-1) != '}') {
+                    return [];
+                }
+                return manaCost.substr(1, manaCost.length-2).split('}{')
             }
         }
     })
@@ -722,11 +730,13 @@ angular.module('lambic.services', [])
             }
         };
     })
-    .factory('CardImageUrlService', function() {
+    .factory('CardImageUrlService', function(UtilityService) {
         // the getUrlFromCard is a thin wrapper around this service and
         // the tests in filterSpec cover this service
+        var manaLookupTable = {};
+
         return {
-            getUrl: function(card) {
+            getCardImageUrl: function(card) {
                 if (!card) {
                     return null
                 }
@@ -748,6 +758,17 @@ angular.module('lambic.services', [])
                     return null;
                 }
 
+            },
+            getManaUrls: function(manaCost) {
+                var urls = [];
+                angular.forEach(UtilityService.splitManaCost(manaCost), function(cost) {
+                    urls.push("http://gatherer.wizards.com/Handlers/Image.ashx?" +
+                        "size=small&" +
+                        "type=symbol&" +
+                        "name=" + (manaLookupTable[cost] || cost.replace('/',''))
+                    );
+                });
+                return urls;
             }
         };
     });
