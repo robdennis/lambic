@@ -27,15 +27,15 @@ describe('lambic e2e tests', function() {
             expect(element(navBar).text()).toMatch(/^White \(1\)$/);
         });
 
-        it("for a typical color, there should be one table with columns for each CMC group", function() {
+        it("for a typical color, there should be two table swith columns for each CMC group", function() {
             // there's two
-            expect(repeater('.smart-table').count()).toEqual(1);
+            expect(repeater('.smart-table').count()).toEqual(2);
 
-            // White has 7 columns in both
-            expect(repeater('.smart-table-header-cell').count()).toEqual(7);
+            // White has 8 columns in both
+            expect(repeater('.smart-table-header-cell').count()).toEqual(16);
 
             // and one row to start in both
-            expect(repeater('table.card-layout tr').count()).toEqual(1);
+            expect(repeater('table.card-layout tr').count()).toEqual(2);
         });
     })
 

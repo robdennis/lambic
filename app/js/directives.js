@@ -45,8 +45,9 @@ angular.module('lambic.directives', []).
 
             template: "" +
             '<div>' +
-                '<div>' +
-                    '<smart-table data="tableData" display-template="template"></smart-table>' +
+                '<div ng-repeat="table in tables">' +
+                    '<label>{{ table.name }}</label>' +
+                    '<smart-table data="table.data" display-template="template"></smart-table>' +
                 '</div>' +
             '</div>',
 
@@ -67,18 +68,43 @@ angular.module('lambic.directives', []).
 
             link: function(scope) {
 
-                var spec = scope.selected.spec || {
-                    'cmc<=1': {},
-                    'cmc==2': {},
-                    'cmc==3': {},
-                    'cmc==4': {},
-                    'cmc==5': {},
-                    'cmc==6': {},
-                    'cmc>=7': {}
-                };
+                var spec = scope.selected.spec || [
+                    [{
+                        category: 'Creature',
+                        label: 'Creatures',
+                        subcategories: [
+                            {category: 'cmc<=1', cards: []},
+                            {category: 'cmc==2', cards: []},
+                            {category: 'cmc==3', cards: []},
+                            {category: 'cmc==4', cards: []},
+                            {category: 'cmc==5', cards: []},
+                            {category: 'cmc==6', cards: []},
+                            {category: 'cmc==7', cards: []},
+                            {category: 'cmc>=8', cards: []}
+                        ]}], [{
+                        category: '!Creature',
+                        label: 'Spells',
+                        subcategories: [
+                            {category: 'cmc<=1', cards: []},
+                            {category: 'cmc==2', cards: []},
+                            {category: 'cmc==3', cards: []},
+                            {category: 'cmc==4', cards: []},
+                            {category: 'cmc==5', cards: []},
+                            {category: 'cmc==6', cards: []},
+                            {category: 'cmc==7', cards: []},
+                            {category: 'cmc>=8', cards: []}
+                        ]}]
+                ];
 
                 scope.$watch('selected.total', function() {
-                    scope.tableData = CubeSortService.sortTable(scope.selected.total.get(), spec);
+                    var tables = [];
+                    angular.forEach(spec, function(subSpec) {
+                        tables.push({
+                            name: subSpec[0].label || subSpec[0].category,
+                            data: CubeSortService.sortTable(scope.selected.total.get(), subSpec)
+                        });
+                    });
+                    scope.tables = tables;
                 });
             }
 

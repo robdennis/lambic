@@ -533,8 +533,10 @@ angular.module('lambic.services', [])
                 var sortedCube;
                 if (existingCube) {
                     sortedCube = existingCube;
-                } else {
+                } else if (!UtilityService.isArray(sortSpec)) {
                     sortedCube = SortSpecService.getSkeleton(sortSpec);
+                } else {
+                    sortedCube = angular.copy(sortSpec);
                 }
 
 
@@ -580,7 +582,7 @@ angular.module('lambic.services', [])
 
                 var cube = this.sortCube(tableData, sortSpec);
                 var table = [];
-                angular.forEach(cube, function(column) {
+                angular.forEach(cube[0].subcategories || cube, function(column) {
                     table.push({
                         header:column.category,
                         data:column.cards || []

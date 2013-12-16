@@ -551,7 +551,92 @@ describe('service', function() {
             });
         }));
 
-        it('should sort with all the supported categories', function() {
+        it('should sort with all the supported categories and a verbose spec', function() {
+
+            angular.forEach(baseCube, function(card) {
+                expect(card).not.toBeFalsy();
+            });
+
+            var sortedCube = svc.sortCube(baseCube, [{
+                category: 'Multicolor',
+                subcategories: [{
+                    category: 'converted_mana_cost<4',
+                    cards: []
+                }, {
+                    category: 'converted_mana_cost>=4',
+                    cards: []
+                }]
+            }, {
+                category: 'Colorless',
+                subcategories: [{
+                    category: 'Artifact',
+                    cards: []
+                }, {
+                    category: '!Artifact',
+                    cards: []
+                }]
+            }, {
+                category: 'MonoBlack',
+                subcategories: [{
+                    category: 'Instant/converted_mana_cost==1',
+                    cards: []
+                }, {
+                    category: 'Instant/converted_mana_cost!=1',
+                    cards: []
+                }, {
+                    category: 'Sorcery',
+                    cards: []
+                }, {
+                    category: 'Planeswalker',
+                    cards: []
+                }]
+            }]);
+
+            namifySortedCube(sortedCube);
+
+            expect(sortedCube).toEqual([{
+                category: 'Multicolor',
+                subcategories: [{
+                    category: 'converted_mana_cost<4',
+                    cards: ['Tidehollow Sculler']
+                }, {
+                    category: 'converted_mana_cost>=4',
+                    cards: ['Sphinx of the Steel Wind']
+                }]
+            }, {
+                category: 'Colorless',
+                subcategories: [{
+                    category: 'Artifact',
+                    cards: ['Thran Dynamo']
+                }, {
+                    category: '!Artifact',
+                    cards: [
+                        'Karn Liberated',
+                        'Wasteland'
+                    ]
+                }]
+            }, {
+                category: 'MonoBlack',
+                subcategories: [{
+                    category: 'Instant/converted_mana_cost==1',
+                    cards: ['Vampiric Tutor']
+                }, {
+                    category: 'Instant/converted_mana_cost!=1',
+                    cards: ['Doom Blade']
+                }, {
+                    category: 'Sorcery',
+                    cards: ['Damnation']
+                }, {
+                    category: 'Planeswalker',
+                    cards: [
+                        'Liliana of the Veil',
+                        'Sorin Markov'
+                    ]
+                }]
+            }]);
+        });
+
+        it('should sort with all the supported categories and a basic spec', function() {
 
             angular.forEach(baseCube, function(card) {
                expect(card).not.toBeFalsy();
