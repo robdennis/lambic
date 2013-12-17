@@ -67,34 +67,36 @@ angular.module('lambic.directives', []).
             },
 
             link: function(scope) {
-
-                var spec = scope.selected.spec || [
-                    [{
-                        category: 'Creature',
-                        label: 'Creatures',
-                        subcategories: [
-                            {category: 'cmc<=1', cards: []},
-                            {category: 'cmc==2', cards: []},
-                            {category: 'cmc==3', cards: []},
-                            {category: 'cmc==4', cards: []},
-                            {category: 'cmc==5', cards: []},
-                            {category: 'cmc==6', cards: []},
-                            {category: 'cmc==7', cards: []},
-                            {category: 'cmc>=8', cards: []}
-                        ]}], [{
-                        category: '!Creature',
-                        label: 'Spells',
-                        subcategories: [
-                            {category: 'cmc<=1', cards: []},
-                            {category: 'cmc==2', cards: []},
-                            {category: 'cmc==3', cards: []},
-                            {category: 'cmc==4', cards: []},
-                            {category: 'cmc==5', cards: []},
-                            {category: 'cmc==6', cards: []},
-                            {category: 'cmc==7', cards: []},
-                            {category: 'cmc>=8', cards: []}
-                        ]}]
-                ];
+                var spec;
+                scope.$watch('selected', function(){
+                    spec = scope.selected.spec || [
+                        [{
+                            category: 'Creature',
+                            label: 'Creatures',
+                            subcategories: [
+                                {category: 'cmc<=1', cards: []},
+                                {category: 'cmc==2', cards: []},
+                                {category: 'cmc==3', cards: []},
+                                {category: 'cmc==4', cards: []},
+                                {category: 'cmc==5', cards: []},
+                                {category: 'cmc==6', cards: []},
+                                {category: 'cmc==7', cards: []},
+                                {category: 'cmc>=8', cards: []}
+                            ]}], [{
+                            category: '!Creature',
+                            label: 'Spells',
+                            subcategories: [
+                                {category: 'cmc<=1', cards: []},
+                                {category: 'cmc==2', cards: []},
+                                {category: 'cmc==3', cards: []},
+                                {category: 'cmc==4', cards: []},
+                                {category: 'cmc==5', cards: []},
+                                {category: 'cmc==6', cards: []},
+                                {category: 'cmc==7', cards: []},
+                                {category: 'cmc>=8', cards: []}
+                            ]}]
+                    ];
+                });
 
                 scope.$watch('selected.total', function() {
                     var tables = [];
@@ -135,7 +137,17 @@ angular.module('lambic.directives', []).
                     {name: 'Red', category: 'MonoRed'},
                     {name: 'Green', category: 'MonoGreen'},
                     {name: 'Colorless', category: 'Colorless/!Land'},
-                    {name: 'Land', category: 'Colorless/Land'},
+                    {name: 'Land', category: 'Colorless/Land', spec: [[
+                        {category: 'Any', label: 'Sources', subcategories: [
+                            {category: 'WhiteSource', label: 'White Sources', cards: []},
+                            {category: 'BlueSource', label: 'Blue Sources', cards: []},
+                            {category: 'BlackSource', label: 'Black Sources', cards: []},
+                            {category: 'RedSource', label: 'Red Sources', cards: []},
+                            {category: 'GreenSource', label: 'Green Sources', cards: []},
+                            {category: '!WhiteSource/!BlueSource/!BlackSource/!RedSource/!GreenSource',
+                                label: 'Colorless', cards: []}
+                        ]}
+                    ]]},
                     {name: 'Multicolor', category: 'Multicolor'},
                     {name: 'All', category: 'Any'}
                 ];

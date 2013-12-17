@@ -50,6 +50,24 @@ angular.module('lambic.services', [])
                 return ['Artifact', 'Creature', 'Enchantment', 'Instant',
                         'Land', 'Planeswalker', 'Sorcery', 'Tribal'];
             },
+            manaSymbolFromColorName: function(name) {
+                return {
+                    white: '{W}',
+                    blue: '{U}',
+                    black: '{B}',
+                    red: '{R}',
+                    green: '{G}'
+                }[name.toLowerCase()];
+            },
+            basicLandFromColorName: function(name) {
+                return {
+                    white: 'Plains',
+                    blue: 'Island',
+                    black: 'Swamp',
+                    red: 'Mountain',
+                    green: 'Forest'
+                }[name.toLowerCase()];
+            },
             splitManaCost: function(manaCost) {
                 // split a mana cost of the form "{U}{2/W}{X}" to an array of ["U", "2/W", "X"]
                 if (!manaCost || manaCost.charAt(0) != '{' ||
@@ -95,7 +113,6 @@ angular.module('lambic.services', [])
             },
 
             isCastableBy: function(colors, manaCost) {
-
 
                 return this.isCastableRegExp(colors).exec(manaCost)
             },
@@ -212,16 +229,45 @@ angular.module('lambic.services', [])
                 if (category.indexOf('Castable') === -1) {
                     return 'na'
                 }
-                var colorMatch = /(.+)Castable/i.exec(category);
+                var colorMatch = /(.+?)\s*Castable/i.exec(category);
 
                 if (!colorMatch) {
                     return 'na';
                 }
 
-                var colors = colorMatch[1].split('&');
+                var colors = colorMatch[1].split(/\s*&\s*/);
 
                 return ManaCostRegexService.isCastableBy(colors, card.mana_cost);
 
+            },
+
+            _checkForManaSource: function(category, card) {
+                if (category.indexOf('Source') === -1) {
+                    return 'na'
+                }
+                var colorMatch = /(.+?)\s*Source/i.exec(category);
+
+                if (!colorMatch) {
+                    return 'na';
+                }
+
+                var colors = colorMatch[1].split(/\s*&\s*/);
+
+                for (var i=0;i<colors.length;i++) {
+                    var sym = UtilityService.manaSymbolFromColorName(colors[i]);
+                    var type = UtilityService.basicLandFromColorName(colors[i]);
+
+                    if (card.subtypes && UtilityService.inArray(type, card.subtypes) !== -1) {
+                        // has basic land type
+                    } else if (card.text && new RegExp('Add[^.]+'+sym+'[^.]+to your mana pool.','i').exec(card.text)) {
+                        // has an explicit color ability
+                    } else {
+                        // not a valid source for a color, so short circuit
+                        return false;
+                    }
+                }
+
+                return true;
             },
 
             _checkForColor: function(category, card) {
@@ -362,6 +408,7 @@ angular.module('lambic.services', [])
                             self._checkForType,
                             self._checkForCMC,
                             self._checkForDiff,
+                            self._checkForManaSource,
                             self._checkForAny
                             // these either return a known string if the checker isn't applicable
                             // or True/False if it is applicable and based on the results of
@@ -584,7 +631,7 @@ angular.module('lambic.services', [])
                 var table = [];
                 angular.forEach(cube[0].subcategories || cube, function(column) {
                     table.push({
-                        header:column.category,
+                        header:column.label || column.category,
                         data:column.cards || []
                     });
                 });
