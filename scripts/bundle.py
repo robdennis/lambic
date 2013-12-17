@@ -10,7 +10,7 @@ CARDS_JSON = os.path.join(__here__, 'cards.json')
 def write_subset_of_cards_to_file(all_cards):
     whitelist=(
         'name', 'converted_mana_cost', 'mana_cost', 'toughness', 'power',
-        'types', 'text', 'color_indicator'
+        'types', 'text', 'color_indicator', 'subtypes', 'supertypes'
     )
 
     # this "dict-comprehension" has the beneficial side-effect of de-duping

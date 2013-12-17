@@ -238,9 +238,10 @@ describe('service', function() {
     describe("cardCategoryServiceTest", function() {
         var svc, heuristicsSvc, cacheSvc, getModded;
 
-        var eliteVanguard, karn, dynamo, sculler, damnation,
+        var eliteVanguard, karn, dynamo, sculler, damnation, lantern,
             emrakul, devilsPlay, souls, legionnaire, nephilim, sliverQueen,
-            wwwww, ultimatum, divinityOfPride, mutavault, ulamog;
+            wwwww, ultimatum, divinityOfPride, mutavault, ulamog, bosk, badlands,
+            coldsteelHeart;
 
         beforeEach(inject(function ($injector,
                                     CardCategoryService,
@@ -273,7 +274,10 @@ describe('service', function() {
             ultimatum = getModded('Cruel Ultimatum');
             divinityOfPride = getModded('Divinity of Pride');
             mutavault = getModded('Mutavault');
-
+            lantern = getModded('Chromatic Lantern');
+            bosk = getModded('Murmuring Bosk');
+            badlands = getModded('Badlands');
+            coldsteelHeart = getModded('Coldsteel Heart');
         }));
 
         beforeEach(function() {
@@ -472,6 +476,21 @@ describe('service', function() {
             expect(emrakul).toMatchCategory('converted_mana_cost<X');
             expect(emrakul).not.toMatchCategory('converted_mana_cost>X');
         });
+
+        it('should categorize things by colors of mana they can produce', function() {
+            // lands with basic land types
+            expect(badlands).toMatchCategory('BlackSource');
+            expect(badlands).toMatchCategory('Red Source');
+            expect(badlands).toMatchCategory('Black & RedSource');
+            expect(badlands).toMatchCategory('Red&BlackSource');
+            expect(badlands).not.toMatchCategory('BlueSource');
+            expect(badlands).not.toMatchCategory('Green&RedSource');
+            // - the most specific form of this check
+            expect(badlands).toMatchCategory('Black & Red Source/!Green Source/!Blue Source/!White Source');
+            // lands with basic land types and a mana ability
+            expect(bosk).toMatchCategory('Green & Black & White Source/!RedSource/!BlueSource');
+        });
+
     });
     describe("namesFromTextServiceTest", function() {
         var svc;
