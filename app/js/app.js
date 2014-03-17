@@ -8,18 +8,19 @@ angular.module('lambic', [
     'lambic.controllers',
     'ui.bootstrap',
     'ngRoute',
-    'angular-onbeforeunload'
+    'angular-onbeforeunload',
+    'ng-depthchart'
 ]).config(['$routeProvider', function ($routeProvider) {
 
-	$routeProvider.
-		when('/', {
-			templateUrl: 'partials/lambic.html',
-			controller: AppCtrl
-		}).
-		when('/help', {
-			templateUrl: 'partials/help.html',
-			controller: StaticCtrl
-		}).
-		otherwise({redirectTo: '/'});
+    $routeProvider.
+        when('/', {
+            templateUrl: 'partials/lambic.html',
+            controller: AppCtrl
+        }).
+        when('/help', {
+            templateUrl: 'partials/help.html',
+            controller: StaticCtrl
+        }).
+        otherwise({redirectTo: '/'});
 
     }]);

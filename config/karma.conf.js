@@ -14,6 +14,7 @@ module.exports = function(config) {
 
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/ng-depthchart/depthchart.js',
       'bower_components/taffydb/taffy.js',
       'bower_components/angular-beforeunload/*.js',
       'app/js/**/*.js',

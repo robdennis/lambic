@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lambic.directives', []).
+angular.module('lambic.directives', ['ng-depthchart']).
     directive('main', function() {
        return {
            restrict: 'E',
@@ -47,7 +47,7 @@ angular.module('lambic.directives', []).
             '<div>' +
                 '<div ng-repeat="table in tables">' +
                     '<label>{{ table.name }}</label>' +
-                    '<smart-table data="table.data" display-template="template"></smart-table>' +
+                    '<depth-chart data="table.data" display-template="template"></depth-chart>' +
                 '</div>' +
             '</div>',
 
@@ -163,63 +163,4 @@ angular.module('lambic.directives', []).
                 });
             }
         }
-    })
-    .directive('smartTable', function ($compile, ZipService) {
-        return {
-            restrict: 'E',
-            scope: {
-                data: '=',
-                displayTemplate: '=',
-                additionalClasses: '='
-            },
-
-            link: function(scope, element) {
-                var tdContent,
-                    classes,
-                    newElement,
-                    template;
-
-                scope.$watch('data', function() {
-                    var items = [];
-                    scope.headerRow = [];
-                    angular.forEach(scope.data, function(value) {
-                        scope.headerRow.push(value.header);
-                        items.push(value.data || []);
-                    });
-
-                    scope.zipped = ZipService.longest.apply(this, items);
-                });
-
-                classes = (scope.additionalClasses || []);
-                classes.push('smart-table-cell');
-
-                if (scope.displayTemplate) {
-                    tdContent = scope.displayTemplate;
-                } else {
-                    tdContent = '{{ item || "&nbsp;"}}';
-                }
-
-                template = '' +
-                    '<table class="smart-table table table-striped table-hover card-layout">' +
-                        '<thead>' +
-                            '<tr class="smart-table-header-row">' +
-                                '<th ng-repeat="title in headerRow" class="smart-table-header-cell">' +
-                                    '{{ title }}' +
-                                '</th>' +
-                            '</tr>' +
-                       '</thead> ' + '<tbody>' +
-                            '<tr ng-repeat="row in zipped">' +
-                                '<td ng-repeat="item in row track by $index" class="'+classes.join(' ')+'">' +
-                                    tdContent +
-                                '</td>' +
-                            '</tr>' +
-                        '</tbody>' +
-                    '</table>';
-
-                newElement = angular.element(template);
-                $compile(newElement)(scope);
-                element.replaceWith(newElement);
-            }
-        };
-    }
-);
+    });
