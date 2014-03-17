@@ -29,10 +29,10 @@ describe('lambic e2e tests', function() {
 
         it("for a typical color, there should be two table swith columns for each CMC group", function() {
             // there's two
-            expect(repeater('.smart-table').count()).toEqual(2);
+            expect(repeater('.depth-chart').count()).toEqual(2);
 
             // White has 8 columns in both
-            expect(repeater('.smart-table-header-cell').count()).toEqual(16);
+            expect(repeater('.depth-chart-header-cell').count()).toEqual(16);
 
             // and one row to start in both
             expect(repeater('table.card-layout tr').count()).toEqual(2);
