@@ -519,7 +519,24 @@ angular.module('lambic.services', [])
             add: function(name) {
                 CardCacheService.get_card(name, function(card) {
                     if (card) {
-                        pool.insert(card);
+                        var cloned_card = angular.extend({}, card);
+                        // we don't want this to be treated as the exact same
+                        // record under the hood, so let it choose a new pk
+                        delete cloned_card.___id;
+                        pool.insert(cloned_card);
+                        angular.forEach(callbacks, function(callback) {
+                            callback(pool());
+                        })
+                    }
+                });
+            },
+
+            remove: function(name) {
+                console.log('removing', name, 'from the pool');
+                CardCacheService.get_card(name, function(card) {
+                    if (card) {
+                        // remove the first card it found with that name
+                        pool().filter({name:card.name}).limit(1).remove();
                         angular.forEach(callbacks, function(callback) {
                             callback(pool());
                         })

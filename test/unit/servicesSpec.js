@@ -94,23 +94,40 @@ describe('service', function() {
             })
         });
 
-        it('adding a name puts it in the cache', function() {
+        it('should request a card from the cache given a name', function() {
             poolService.add('Damnation');
             expect(cacheService.get_card).toHaveBeenCalled();
             expect(poolService.get().count()).toBe(1);
         });
 
-        it('adding an unknown name does not do anything', function() {
+        it('can remove a card given a name', function() {
+            poolService.add('Damnation');
+            expect(cacheService.get_card).toHaveBeenCalled();
+            expect(poolService.get().count()).toBe(1);
+            cacheService.get_card.reset();
+            expect(cacheService.get_card).not.toHaveBeenCalled();
+            poolService.remove('Damnation');
+            expect(cacheService.get_card).toHaveBeenCalled();
+            expect(poolService.get().count()).toBe(0);
+        });
+
+        it("shouldn't do anything when given an unknown card name", function() {
             poolService.add('UNKNOWN CARD NAME');
             expect(cacheService.get_card).toHaveBeenCalled();
             expect(poolService.get().count()).toBe(0);
         });
 
-        it('setting an unknown name does not do anything', function() {
-            poolService.set(['UNKNOWN CARD NAME']);
-            expect(cacheService.get_cards).toHaveBeenCalled();
+        it('can add and remove repeated cards, one at a time', function() {
             expect(poolService.get().count()).toBe(0);
-        });
+            poolService.add('Mutavault');
+            expect(poolService.get().count()).toBe(1);
+            poolService.add('Mutavault');
+            expect(poolService.get().count()).toBe(2);
+            poolService.remove('Mutavault');
+            expect(poolService.get().count()).toBe(1);
+            poolService.remove('Mutavault');
+            expect(poolService.get().count()).toBe(0);
+        })
 
         it('should correctly guess what is on a pane', function() {
             poolService.addMany([
