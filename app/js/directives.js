@@ -47,21 +47,23 @@ angular.module('lambic.directives', ['ng-depthchart']).
             '<div>' +
                 '<div ng-repeat="table in tables">' +
                     '<label>{{ table.name }}</label>' +
-                    '<depth-chart data="table.data" display-template="template"></depth-chart>' +
+                    '<depth-chart data="table.data" display-template="template" template-function="remove(name)"></depth-chart>' +
                 '</div>' +
             '</div>',
 
-            controller: function($scope) {
+            controller: function($scope, PoolService) {
+                $scope.pool = PoolService;
                 var htmlTooltipTemplate = "" +
                     "<img " +
                         "id='cardview' " +
                         "style=\'border:none;height=310px;width=223px\' " +
                         "src='{{item | getUrlFromCard}}'" +
                     ">";
-
+                $scope.remove = PoolService.remove;
                 $scope.template = '' +
                     '<div tooltip-placement="right" tooltip-html-unsafe="'+htmlTooltipTemplate+'">' +
-                        '{{ item.name }}' +
+                        '<span>{{ item.name }}</span>' +
+                        '<button ng-if="item.name" ng-click="templateFunction({name:item.name})">-</button>' +
                     '</div>';
 
             },
