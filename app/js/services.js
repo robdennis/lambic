@@ -736,7 +736,7 @@ angular.module('lambic.services', [])
             }
         }
     })
-    .factory('CardCacheService', function($cacheFactory, HeuristicService) {
+    .factory('CardCacheService', function($cacheFactory, HeuristicService, CardCategoryService) {
         var cache = new TAFFY();
 
 
@@ -793,7 +793,14 @@ angular.module('lambic.services', [])
                     }
                 });
                 return callback(result);
-            }
+            },
+
+           filterCategory: function(cat, querySet) {
+                querySet = querySet || cache();
+
+                return querySet.filter(CardCategoryService.makeMatcher(cat))
+
+            },
         };
     })
     .factory('CardImageUrlService', function(UtilityService) {

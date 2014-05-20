@@ -21,10 +21,16 @@ angular.module('lambic.directives', ['ng-depthchart']).
            restrict: 'E',
            replace: true,
            templateUrl: 'partials/content-header.html',
-           controller: function($scope, PoolService) {
+           controller: function($scope, PoolService, CardCacheService) {
                $scope.add = function(name) {
                    PoolService.add(name);
                }
+
+               $scope.visibleCards = [];
+               $scope.$watch('selectedCategory.value.category', function() {
+                    // only show what's on the tab you're on for quick add
+                    $scope.visibleCards = CardCacheService.filterCategory($scope.selectedCategory.value.category).get();
+               });
            }
        }
     }).
