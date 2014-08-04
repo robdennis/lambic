@@ -477,7 +477,7 @@ angular.module('lambic.services', [])
             }
         }
     })
-    .factory('PoolService', function($rootScope, CardCacheService, CardCategoryService) {
+    .factory('PoolService', function($rootScope, CardCacheService, CardCategoryService, $log) {
         var pool = new TAFFY();
         var callbacks = [];
 
@@ -532,7 +532,7 @@ angular.module('lambic.services', [])
             },
 
             remove: function(name) {
-                console.log('removing', name, 'from the pool');
+                $log.debug('removing', name, 'from the pool');
                 CardCacheService.get_card(name, function(card) {
                     if (card) {
                         // remove the first card it found with that name
@@ -736,7 +736,7 @@ angular.module('lambic.services', [])
             }
         }
     })
-    .factory('CardCacheService', function($cacheFactory, HeuristicService, CardCategoryService) {
+    .factory('CardCacheService', function($cacheFactory, HeuristicService, CardCategoryService, $log) {
         var cache = new TAFFY();
 
 
@@ -774,6 +774,9 @@ angular.module('lambic.services', [])
                 // in case the cache is backed somewhere where we need the async
                 // access
                 var result = cache({name: name}).first();
+                if (!result) {
+                    $log.debug('unable to find card named: ' + name)
+                }
                 return callback(result);
             },
 
@@ -790,6 +793,8 @@ angular.module('lambic.services', [])
                     // there's no results
                     if (fetchedCard) {
                         result.push(fetchedCard);
+                    } else {
+                        $log.debug('unable to find card named: ' + name)
                     }
                 });
                 return callback(result);

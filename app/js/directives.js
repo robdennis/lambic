@@ -68,7 +68,7 @@ angular.module('lambic.directives', ['ng-depthchart']).
                 $scope.remove = PoolService.remove;
                 $scope.template = '' +
                     '<div tooltip-placement="right" tooltip-html-unsafe="'+htmlTooltipTemplate+'">' +
-                        '<span>{{ item.name }}</span>' +
+                        '<span>{{ item.name }}</span>&nbsp;' +
                         '<button ng-if="item.name" ng-click="templateFunction({name:item.name})">-</button>' +
                     '</div>';
 
