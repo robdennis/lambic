@@ -1,0 +1,15 @@
+<div class="content-header row well well-sm">
+        <div class="col-lg-3">
+            <div class="input-append input-group">
+                <input name="quickadd" ng-model="quickadd" type="text" class="form-control" typeahead="name for name in cards.select('name') | filter:$viewValue | limitTo:10" placeholder='Card name...'>
+                <span class='input-group-btn'>
+                    <button class="btn btn-primary quickadd-btn" type="submit" ng-click="add(quickadd)">Add</button>
+                </span>
+            </div>
+        </div>
+
+        <div class="btn-group pull-right">
+            <button id="importBtn" class="btn btn-default" ng-click="importDialog()">Import</button>
+            <button id="exportBtn"  class="btn btn-default" ng-click="exportDialog()">Export</button>
+        </div>
+</div>
