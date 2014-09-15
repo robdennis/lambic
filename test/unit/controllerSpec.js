@@ -3,7 +3,7 @@
 describe('MainCtrl', function(){
 
     beforeEach(function() {
-        module('lambic.controllers');
+        module('lambicApp.controllers');
     });
     describe("AppCtrl", function() {
 

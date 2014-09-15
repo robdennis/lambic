@@ -1,8 +1,7 @@
 <div class="content-header row well well-sm">
         <div class="col-lg-3">
             <div class="input-append input-group">
-                <input name="quickadd" ng-model="quickadd" type="text" class="form-control" typeahead="card.name for card in visibleCards | filter:{name: $viewValue} | limitTo:10"
-                       typeahead-template-url="partials/typeahead_template.html" placeholder='Card name...'>
+                <input name="quickadd" ng-model="quickadd" type="text" class="form-control" typeahead="name for name in cards.select('name') | filter:$viewValue | limitTo:10" placeholder='Card name...'>
                 <span class='input-group-btn'>
                     <button class="btn btn-primary quickadd-btn" type="submit" ng-click="add(quickadd)">Add</button>
                 </span>

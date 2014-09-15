@@ -3,7 +3,7 @@
 /* jasmine specs for directives go here */
 
 describe('directives', function() {
-    beforeEach(module('lambic.directives', 'lambic.services', 'lambic.filters'));
+    beforeEach(module('lambicApp.directives', 'lambicApp.services', 'lambicApp.filters'));
     beforeEach(function() {
         this.addMatchers({
             toHaveClass: function(cls) {

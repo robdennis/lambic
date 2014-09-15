@@ -60,7 +60,7 @@ var getValues = function(someArray, key) {
 describe('service', function() {
 
     beforeEach(function() {
-        module('lambic.services');
+        module('lambicApp.services');
     });
 
     describe('PoolService', function() {

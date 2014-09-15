@@ -3,7 +3,7 @@
 /* jasmine specs for filters go here */
 
 describe('filter', function() {
-    beforeEach(module('lambic.filters'));
+    beforeEach(module('lambicApp.filters'));
 
     describe('inSlicesOf', function() {
 
