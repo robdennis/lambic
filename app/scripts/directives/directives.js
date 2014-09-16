@@ -24,7 +24,7 @@ angular.module('lambicApp.directives', ['ng-depthchart']).
             controller: function($scope, PoolService, CardCacheService) {
                 $scope.add = function(name) {
                     PoolService.add(name);
-                }
+                };
 
                 $scope.visibleCards = [];
                 $scope.$watch('selectedCategory.value.category', function() {
@@ -138,25 +138,38 @@ angular.module('lambicApp.directives', ['ng-depthchart']).
 
             controller: function($scope) {
 
+//                $scope.categories = [
+//                    {name: 'White', category: 'MonoWhite', active: true},
+//                    {name: 'Blue', category: 'MonoBlue'},
+//                    {name: 'Black', category: 'MonoBlack'},
+//                    {name: 'Red', category: 'MonoRed'},
+//                    {name: 'Green', category: 'MonoGreen'},
+//                    {name: 'Colorless', category: 'Colorless/!Land'},
+//                    {name: 'Land', category: 'Colorless/Land', spec: [[
+//                        {category: 'Any', label: 'Sources', subcategories: [
+//                            {category: 'WhiteSource', label: 'White Sources', cards: []},
+//                            {category: 'BlueSource', label: 'Blue Sources', cards: []},
+//                            {category: 'BlackSource', label: 'Black Sources', cards: []},
+//                            {category: 'RedSource', label: 'Red Sources', cards: []},
+//                            {category: 'GreenSource', label: 'Green Sources', cards: []},
+//                            {category: '!WhiteSource/!BlueSource/!BlackSource/!RedSource/!GreenSource',
+//                                label: 'Colorless', cards: []}
+//                        ]}
+//                    ]]},
+//                    {name: 'Multicolor', category: 'Multicolor'},
+//                    {name: 'All', category: 'Any'}
+//                ];
                 $scope.categories = [
-                    {name: 'White', category: 'MonoWhite', active: true},
-                    {name: 'Blue', category: 'MonoBlue'},
-                    {name: 'Black', category: 'MonoBlack'},
-                    {name: 'Red', category: 'MonoRed'},
-                    {name: 'Green', category: 'MonoGreen'},
-                    {name: 'Colorless', category: 'Colorless/!Land'},
-                    {name: 'Land', category: 'Colorless/Land', spec: [[
-                        {category: 'Any', label: 'Sources', subcategories: [
-                            {category: 'WhiteSource', label: 'White Sources', cards: []},
-                            {category: 'BlueSource', label: 'Blue Sources', cards: []},
-                            {category: 'BlackSource', label: 'Black Sources', cards: []},
-                            {category: 'RedSource', label: 'Red Sources', cards: []},
-                            {category: 'GreenSource', label: 'Green Sources', cards: []},
-                            {category: '!WhiteSource/!BlueSource/!BlackSource/!RedSource/!GreenSource',
-                                label: 'Colorless', cards: []}
-                        ]}
-                    ]]},
-                    {name: 'Multicolor', category: 'Multicolor'},
+                    {name: 'Bant', category: 'White&Blue&GreenCastable', active: true},
+                    {name: 'Azban', category: 'White&Black&GreenCastable'},
+                    {name: 'Esper', category: 'White&Black&BlueCastable'},
+                    {name: 'Sultai', category: 'Green&Black&BlueCastable'},
+                    {name: 'Jund', category: 'Green&Black&RedCastable'},
+                    {name: 'Temur', category: 'Green&Blue&RedCastable'},
+                    {name: 'Naya', category: 'Green&White&RedCastable'},
+                    {name: 'Mardu', category: 'Black&White&RedCastable'},
+                    {name: 'Grixis', category: 'Black&Blue&RedCastable'},
+                    {name: 'Jeskai', category: 'White&Blue&RedCastable'},
                     {name: 'All', category: 'Any'}
                 ];
 

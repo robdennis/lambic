@@ -1,0 +1,4 @@
+<a tabindex="-1">
+    {{match.model.name}} {{match.model.mana_cost ? ' - ' : ''}}<img ng-repeat="symbolUrl in match.model.mana_cost | manaSymbolsAsImages track by $index"
+                                                                    ng-src="{{symbolUrl}}">
+</a>

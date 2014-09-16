@@ -287,7 +287,8 @@ describe('service', function() {
             legionnaire = getModded("Porcelain Legionnaire");
             nephilim = getModded('Witch-Maw Nephilim');
             sliverQueen = getModded('Sliver Queen');
-            wwwww = getModded('Who/What/When/Where/Why');
+            //split cards aren't combined
+            //wwwww = getModded('Who/What/When/Where/Why');
             ultimatum = getModded('Cruel Ultimatum');
             divinityOfPride = getModded('Divinity of Pride');
             mutavault = getModded('Mutavault');
