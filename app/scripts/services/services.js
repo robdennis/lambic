@@ -91,8 +91,13 @@ angular.module('lambicApp.services', [])
         };
 
         return {
-            isColorPresent: function(name) {
-                return new RegExp(this._nameToAbbrev(name), 'i');
+            isColorPresent: function(color) {
+                return new RegExp([
+                    '('+this._mono(color)+')',
+                    '('+this._mono_hybrid(color)+')',
+                    '('+this._phyrexian(color)+')',
+                    '('+this._hybrid_involving(color)+')'
+                ].join('|'));
             },
             _nameToAbbrev: function(name) {
                 return _color_to_abbrev_mapping[name.toLowerCase()];
@@ -101,7 +106,7 @@ angular.module('lambicApp.services', [])
                 return '{'+this._nameToAbbrev(color)+'/P}';
             },
             _mono_hybrid: function(color) {
-                return '{'+this._nameToAbbrev(color)+'/2}';
+                return '{2/'+this._nameToAbbrev(color)+'}';
             },
             _hybrid_involving: function(color) {
                 var _color_on_top = this._nameToAbbrev(color)+'/'+_any_color;
@@ -150,15 +155,15 @@ angular.module('lambicApp.services', [])
                 _selected = selected
             },
 
-            estimateColors: function(card) {
+            estimateColors: function(field) {
                 var includedColors = [];
-                if (!card.manaCost) {
+                if (!field) {
                     return includedColors;
                 }
 
                 angular.forEach(UtilityService.colorList(), function(color) {
                     var colorRegex = ManaCostRegexService.isColorPresent(color);
-                    if (colorRegex.exec(card.manaCost)) {
+                    if (colorRegex.exec(field)) {
                         includedColors.push(color)
                     }
                 });
@@ -237,6 +242,45 @@ angular.module('lambicApp.services', [])
 
                 return ManaCostRegexService.isCastableBy(colors, card.manaCost);
 
+            },
+
+            _checkForExclusiveColorIdentity: function(category, card) {
+                if (category.indexOf('ColorIdentityExclusive') === -1) {
+                    return 'na'
+                }
+
+                var colorMatch = /(.+?)\s*ColorIdentityExclusive/i.exec(category);
+
+                if (!colorMatch) {
+                    return 'na';
+                }
+
+                var colors = colorMatch[1].split(/\s*&\s*/);
+
+                return angular.equals(colors.sort(), card.colorIdentity.sort());
+            },
+
+            _checkForInclusiveColorIdentity: function(category, card) {
+                if (category.indexOf('ColorIdentityInclusive') === -1) {
+                    return 'na'
+                }
+
+                var colorMatch = /(.+?)\s*ColorIdentityInclusive/i.exec(category);
+
+                if (!colorMatch) {
+                    return 'na';
+                }
+
+                var colors = colorMatch[1].split(/\s*&\s*/);
+
+                var included = true;
+                angular.forEach(card.colorIdentity, function(color) {
+
+                   if (included) {
+                       included = UtilityService.inArray(color, colors) !== -1
+                   }
+                });
+                return included;
             },
 
             _checkForManaSource: function(category, card) {
@@ -401,6 +445,8 @@ angular.module('lambicApp.services', [])
                         var shouldContinueChecking = true;
 
                         angular.forEach([
+                            self._checkForExclusiveColorIdentity,
+                            self._checkForInclusiveColorIdentity,
                             self._checkForCastability,
                             self._checkForColor,
                             self._checkForType,
@@ -737,11 +783,11 @@ angular.module('lambicApp.services', [])
     .factory('CardCacheService', function($cacheFactory, HeuristicService, CardCategoryService, $log) {
         var cache = new TAFFY();
 
-
         return {
             onInsert: function(card) {
 
-                card.colors = HeuristicService.estimateColors(card);
+                card.colors = HeuristicService.estimateColors(card.manaCost);
+                card.colorIdentity = HeuristicService.estimateColors(card.text + card.manaCost);
 
                 return card;
             },
