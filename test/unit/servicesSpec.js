@@ -497,7 +497,6 @@ describe('service', function() {
             expect(sculler).toMatchCategory('White&BlackColorIdentityInclusive');
         });
 
-
         it('should handle the "any" case', function() {
             expect(sculler).toMatchCategory('Any');
             expect(sculler).not.toMatchCategory('!Any');

@@ -545,12 +545,7 @@ angular.module('lambicApp.services', [])
             set: function(names) {
                 pool().remove(true);
 
-                CardCacheService.get_cards(names, function(cards) {
-                    pool.insert(cards);
-                    angular.forEach(callbacks, function(callback) {
-                        callback(pool());
-                    });
-                });
+                this.addMany(names);
             },
 
             addMany: function(names) {
