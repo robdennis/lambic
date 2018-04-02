@@ -91,8 +91,13 @@ angular.module('lambic.services', [])
         };
 
         return {
-            isColorPresent: function(name) {
-                return new RegExp(this._nameToAbbrev(name), 'i');
+            isColorPresent: function(color) {
+                return new RegExp([
+                    '('+this._mono(color)+')',
+                    '('+this._mono_hybrid(color)+')',
+                    '('+this._phyrexian(color)+')',
+                    '('+this._hybrid_involving(color)+')'
+                ].join('|'));
             },
             _nameToAbbrev: function(name) {
                 return _color_to_abbrev_mapping[name.toLowerCase()];
@@ -101,7 +106,7 @@ angular.module('lambic.services', [])
                 return '{'+this._nameToAbbrev(color)+'/P}';
             },
             _mono_hybrid: function(color) {
-                return '{'+this._nameToAbbrev(color)+'/2}';
+                return '{2/'+this._nameToAbbrev(color)+'}';
             },
             _hybrid_involving: function(color) {
                 var _color_on_top = this._nameToAbbrev(color)+'/'+_any_color;
@@ -165,7 +170,8 @@ angular.module('lambic.services', [])
                 //TODO: respect color indicator
 
                 return includedColors;
-            }        }
+            }
+        }
     })
     .factory('CardCategoryService', function(HeuristicService,
                                              ManaCostRegexService,
