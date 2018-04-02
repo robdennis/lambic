@@ -174,7 +174,7 @@ angular.module('lambic.services', [])
                                              ManaCostRegexService,
                                              UtilityService) {
 
-        var multiColorRegex = /(.+?)(?:-|\s)*color/i;
+        var multiColorRegex = /(.+?)(?:-|\s)*(color.*)/i;
         return {
             isColorCategory: function(category) {
                 return UtilityService.inArray(category, UtilityService.colorList()) !== -1
@@ -214,11 +214,17 @@ angular.module('lambic.services', [])
                     expectGreaterOrEqual = true;
                 }
                 var expectedLength = colorMap[numCats];
+                var attribute;
                 if (!(expectedLength === undefined)) {
-                    if (expectGreaterOrEqual) {
-                        return card['colors'].length >= expectedLength;
+                    if (/color-identity$/.exec(mcMatch[2])) {
+                        attribute = 'colorIdentity';
                     } else {
-                        return card['colors'].length == expectedLength;
+                        attribute = 'colors';
+                    }
+                    if (expectGreaterOrEqual) {
+                        return card[attribute].length >= expectedLength;
+                    } else {
+                        return card[attribute].length == expectedLength;
                     }
                 } else {
                     return 'na'

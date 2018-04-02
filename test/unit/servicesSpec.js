@@ -408,6 +408,43 @@ describe('service', function() {
 //            expect(wwwww).toMatchCategory('5-color');
         });
 
+        it('can handle categories like "3-color-identity"', function() {
+            expect(karn).toMatchCategory('zero-color-identity');
+            expect(karn).toMatchCategory('0-color-identity');
+            expect(sculler).toMatchCategory('2 color-identity');
+            expect(sculler).toMatchCategory('2  color-identity');
+            expect(sculler).toMatchCategory('2color-identity');
+            expect(sculler).toMatchCategory('2-color-identity');
+            expect(sculler).toMatchCategory('2+ color-identity');
+            expect(sculler).toMatchCategory('2+color-identity');
+            expect(sculler).toMatchCategory('2+-color-identity');
+            expect(sculler).not.toMatchCategory('tri-color-identity');
+            expect(sculler).not.toMatchCategory('5-color-identity');
+            expect(ultimatum).toMatchCategory('2+ color-identity');
+            expect(ultimatum).toMatchCategory('tri-color-identity');
+            expect(ultimatum).toMatchCategory('tri+-color-identity');
+            expect(ultimatum).not.toMatchCategory('5-color-identity');
+            expect(nephilim).not.toMatchCategory('three-color-identity');
+            expect(nephilim).not.toMatchCategory('2-color-identity');
+            expect(nephilim).toMatchCategory('2+-color-identity');
+            expect(nephilim).toMatchCategory('4-color-identity');
+            expect(nephilim).toMatchCategory('quad+-color-identity');
+            expect(nephilim).not.toMatchCategory('5-color-identity');
+            expect(sliverQueen).not.toMatchCategory('2-color-identity');
+            expect(sliverQueen).toMatchCategory('2+-color-identity');
+            expect(sliverQueen).toMatchCategory('3+-color-identity');
+            expect(sliverQueen).toMatchCategory('4+-color-identity');
+            expect(sliverQueen).toMatchCategory('5+-color-identity');
+            expect(sliverQueen).toMatchCategory('5-color-identity');
+            // don't yet have a correct way of handling this as a special case
+//            expect(wwwww).not.toMatchCategory('2-color-identity');
+//            expect(wwwww).toMatchCategory('2+-color-identity');
+//            expect(wwwww).toMatchCategory('3+-color-identity');
+//            expect(wwwww).toMatchCategory('4+-color-identity');
+//            expect(wwwww).toMatchCategory('5+-color-identity');
+//            expect(wwwww).toMatchCategory('5-color-identity');
+        });
+
         it('should distinguish between colorless and artifacts', function() {
             expect(karn).not.toMatchCategory('Colorless/Artifact');
             expect(karn).toMatchCategory('Colorless/!Artifact');
