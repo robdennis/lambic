@@ -154,13 +154,13 @@ angular.module('lambic.services', [])
 
                 var includedColors = [];
 
-                if (!card.manaCost) {
+                if (!card.mana_cost) {
                     return includedColors;
                 }
 
                 angular.forEach(UtilityService.colorList(), function(color) {
                    var colorRegex = ManaCostRegexService.isColorPresent(color);
-                   if (colorRegex.exec(card.manaCost)) {
+                   if (colorRegex.exec(card.mana_cost)) {
                        includedColors.push(color)
                    }
                 });
@@ -243,7 +243,7 @@ angular.module('lambic.services', [])
 
                 var colors = colorMatch[1].split(/\s*&\s*/);
 
-                return ManaCostRegexService.isCastableBy(colors, card.manaCost);
+                return ManaCostRegexService.isCastableBy(colors, card.mana_cost);
 
             },
 
@@ -320,7 +320,7 @@ angular.module('lambic.services', [])
                 var match = cmcRegex.exec(category);
                 if (match) {
                     var integerCMC;
-                    var cardCMC = card['cmc'];
+                    var cardCMC = card['converted_mana_cost'];
                     if (cardCMC==-1) {
                         // -1 is what we're using to represent 'X' spells
                         cardCMC = Number.POSITIVE_INFINITY;
