@@ -774,6 +774,7 @@ angular.module('lambic.services', [])
             onInsert: function(card) {
 
                 card.colors = HeuristicService.estimateColors(card);
+                card.colorIdentity = HeuristicService.estimateColors(card.text + card.manaCost);
 
                 return card;
             },
