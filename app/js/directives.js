@@ -131,11 +131,13 @@ angular.module('lambic.directives', []).
             controller: function($scope) {
 
                 $scope.categories = [
-                    {name: 'White', category: 'MonoWhite', active: true},
-                    {name: 'Blue', category: 'MonoBlue'},
-                    {name: 'Black', category: 'MonoBlack'},
-                    {name: 'Red', category: 'MonoRed'},
-                    {name: 'Green', category: 'MonoGreen'},
+                    // top row
+                    {name: 'All', category: 'Any', active: true},
+                    {name: 'White', category: 'WhiteColorIdentityExclusive'},
+                    {name: 'Blue', category: 'BlueColorIdentityExclusive'},
+                    {name: 'Black', category: 'BlackColorIdentityExclusive'},
+                    {name: 'Red', category: 'RedColorIdentityExclusive'},
+                    {name: 'Green', category: 'GreenColorIdentityExclusive'},
                     {name: 'Colorless', category: 'Colorless/!Land'},
                     {name: 'Land', category: 'Colorless/Land', spec: [[
                         {category: 'Any', label: 'Sources', subcategories: [
@@ -148,10 +150,65 @@ angular.module('lambic.directives', []).
                                 label: 'Colorless', cards: []}
                         ]}
                     ]]},
-                    {name: 'Multicolor', category: 'Multicolor'},
-                    {name: 'All', category: 'Any'}
-                ];
+                    {name: 'Guilds', category: '2-color-identity', spec: [[
+                        {label: 'Azorious', category: 'White&BlueColorIdentityExclusive', cards: []},
+                        {label: 'Orzhov', category: 'White&BlackColorIdentityExclusive', cards: []},
+                        {label: 'Dimir', category: 'Black&BlueColorIdentityExclusive', cards: []},
+                        {label: 'Simic', category: 'Green&BlueColorIdentityExclusive', cards: []},
+                        {label: 'Golgari', category: 'Green&BlackColorIdentityExclusive', cards: []},
+                        {label: 'Izzet', category: 'Blue&RedColorIdentityExclusive', cards: []},
+                        {label: 'Gruul', category: 'Green&RedColorIdentityExclusive', cards: []},
+                        {label: 'Boros', category: 'White&RedColorIdentityExclusive', cards: []},
+                        {label: 'Rakdos', category: 'Black&RedColorIdentityExclusive', cards: []},
+                        {label: 'Selesnya', category: 'White&GreenColorIdentityExclusive', cards: []}
+                    ]]},
+                    {name: 'Shards/Clans', category: '3+-color-identity', spec: [[
+                        {label: 'Bant', category: 'White&Blue&GreenColorIdentityExclusive', cards: []},
+                        {label: 'Azban', category: 'White&Black&GreenColorIdentityExclusive', cards: []},
+                        {label: 'Esper', category: 'White&Black&BlueColorIdentityExclusive', cards: []},
+                        {label: 'Sultai', category: 'Green&Black&BlueColorIdentityExclusive', cards: []},
+                        {label: 'Jund', category: 'Green&Black&RedColorIdentityExclusive', cards: []},
+                        {label: 'Temur', category: 'Green&Blue&RedColorIdentityExclusive', cards: []},
+                        {label: 'Naya', category: 'Green&White&RedColorIdentityExclusive', cards: []},
+                        {label: 'Mardu', category: 'Black&White&RedColorIdentityExclusive', cards: []},
+                        {label: 'Grixis', category: 'Black&Blue&RedColorIdentityExclusive', cards: []},
+                        {label: 'Jeskai', category: 'White&Blue&RedColorIdentityExclusive', cards: []}
+                    ]]},
+                    // second row
+                    {name: 'Bant-ci', category: 'White&Blue&GreenColorIdentityInclusive/!Land'},
+                    {name: 'Azban-ci', category: 'White&Black&GreenColorIdentityInclusive/!Land'},
+                    {name: 'Esper-ci', category: 'White&Black&BlueColorIdentityInclusive/!Land'},
+                    {name: 'Sultai-ci', category: 'Green&Black&BlueColorIdentityInclusive/!Land'},
+                    {name: 'Jund-ci', category: 'Green&Black&RedColorIdentityInclusive/!Land'},
+                    {name: 'Temur-ci', category: 'Green&Blue&RedColorIdentityInclusive/!Land'},
+                    {name: 'Naya-ci', category: 'Green&White&RedColorIdentityInclusive/!Land'},
+                    {name: 'Mardu-ci', category: 'Black&White&RedColorIdentityInclusive/!Land'},
+                    {name: 'Grixis-ci', category: 'Black&Blue&RedColorIdentityInclusive/!Land'},
+                    {name: 'Jeskai-ci', category: 'White&Blue&RedColorIdentityInclusive/!Land'},
+                    // third row
+                    {name: 'Bant', category: 'White&Blue&GreenCastable'},
+                    {name: 'Azban', category: 'White&Black&GreenCastable'},
+                    {name: 'Esper', category: 'White&Black&BlueCastable'},
+                    {name: 'Sultai', category: 'Green&Black&BlueCastable'},
+                    {name: 'Jund', category: 'Green&Black&RedCastable'},
+                    {name: 'Temur', category: 'Green&Blue&RedCastable'},
+                    {name: 'Naya', category: 'Green&White&RedCastable'},
+                    {name: 'Mardu', category: 'Black&White&RedCastable'},
+                    {name: 'Grixis', category: 'Black&Blue&RedCastable'},
+                    {name: 'Jeskai', category: 'White&Blue&RedCastable'},
+                    // 4th
+                    {name: 'Azorious', category: 'White&BlueCastable'},
+                    {name: 'Orzhov', category: 'White&BlackCastable'},
+                    {name: 'Dimir', category: 'Black&BlueCastable'},
+                    {name: 'Simic', category: 'Green&BlueCastable'},
+                    {name: 'Golgari', category: 'Green&BlackCastable'},
+                    {name: 'Izzet', category: 'Blue&RedCastable'},
+                    {name: 'Gruul', category: 'Green&RedCastable'},
+                    {name: 'Boros', category: 'White&RedCastable'},
+                    {name: 'Rakdos', category: 'Black&RedCastable'},
+                    {name: 'Selesnya', category: 'White&GreenCastable'}
 
+                ];
                 $scope.selectedCategory = {value: $scope.categories[0]};
 
             },
