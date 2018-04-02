@@ -498,6 +498,18 @@ describe('service', function() {
             expect(eliteVanguard).not.toMatchCategory('BlackCastable');
         });
 
+        it('should handle the color identity case', function() {
+            expect(eliteVanguard).toMatchCategory('WhiteColorIdentityExclusive');
+            expect(eliteVanguard).toMatchCategory('WhiteColorIdentityInclusive');
+            expect(eliteVanguard).not.toMatchCategory('BlackColorIdentityInclusive');
+            expect(eliteVanguard).not.toMatchCategory('White&BlackColorIdentityExclusive');
+            expect(eliteVanguard).toMatchCategory('White&BlackColorIdentityInclusive');
+            expect(sculler).not.toMatchCategory('WhiteColorIdentityExclusive');
+            expect(sculler).not.toMatchCategory('WhiteColorIdentityInclusive');
+            expect(sculler).toMatchCategory('White&BlackColorIdentityExclusive');
+            expect(sculler).toMatchCategory('White&BlackColorIdentityInclusive');
+        });
+
         it('should handle the "any" case', function() {
             expect(sculler).toMatchCategory('Any');
             expect(sculler).not.toMatchCategory('!Any');

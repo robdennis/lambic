@@ -247,6 +247,45 @@ angular.module('lambic.services', [])
 
             },
 
+            _checkForExclusiveColorIdentity: function(category, card) {
+                if (category.indexOf('ColorIdentityExclusive') === -1) {
+                    return 'na'
+                }
+
+                var colorMatch = /(.+?)\s*ColorIdentityExclusive/i.exec(category);
+
+                if (!colorMatch) {
+                    return 'na';
+                }
+
+                var colors = colorMatch[1].split(/\s*&\s*/);
+
+                return angular.equals(colors.sort(), card.colorIdentity.sort());
+            },
+
+            _checkForInclusiveColorIdentity: function(category, card) {
+                if (category.indexOf('ColorIdentityInclusive') === -1) {
+                    return 'na'
+                }
+
+                var colorMatch = /(.+?)\s*ColorIdentityInclusive/i.exec(category);
+
+                if (!colorMatch) {
+                    return 'na';
+                }
+
+                var colors = colorMatch[1].split(/\s*&\s*/);
+
+                var included = true;
+                angular.forEach(card.colorIdentity, function(color) {
+
+                   if (included) {
+                       included = UtilityService.inArray(color, colors) !== -1
+                   }
+                });
+                return included;
+            },
+
             _checkForManaSource: function(category, card) {
                 if (category.indexOf('Source') === -1) {
                     return 'na'
@@ -409,6 +448,8 @@ angular.module('lambic.services', [])
                         var shouldContinueChecking = true;
 
                         angular.forEach([
+                            self._checkForExclusiveColorIdentity,
+                            self._checkForInclusiveColorIdentity,
                             self._checkForCastability,
                             self._checkForColor,
                             self._checkForType,
