@@ -150,25 +150,22 @@ angular.module('lambic.services', [])
                 _selected = selected
             },
 
-            estimateColors: function(card) {
-
+            estimateColors: function(field) {
                 var includedColors = [];
-
-                if (!card.manaCost) {
+                if (!field) {
                     return includedColors;
                 }
 
                 angular.forEach(UtilityService.colorList(), function(color) {
-                   var colorRegex = ManaCostRegexService.isColorPresent(color);
-                   if (colorRegex.exec(card.manaCost)) {
-                       includedColors.push(color)
-                   }
+                    var colorRegex = ManaCostRegexService.isColorPresent(color);
+                    if (colorRegex.exec(field)) {
+                        includedColors.push(color)
+                    }
                 });
                 //TODO: respect color indicator
 
                 return includedColors;
-            }
-        }
+            }        }
     })
     .factory('CardCategoryService', function(HeuristicService,
                                              ManaCostRegexService,
@@ -773,7 +770,7 @@ angular.module('lambic.services', [])
         return {
             onInsert: function(card) {
 
-                card.colors = HeuristicService.estimateColors(card);
+                card.colors = HeuristicService.estimateColors(card.manaCost);
                 card.colorIdentity = HeuristicService.estimateColors(card.text + card.manaCost);
 
                 return card;
