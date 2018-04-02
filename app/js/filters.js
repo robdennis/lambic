@@ -56,7 +56,6 @@ angular.module('lambic.filters', ['lambic.services']).
         ['CardImageUrlService', '$sce',
             function(CardImageUrlService, $sce) {
                 return function(item) {
-                    console.log('getting urls from:' + item)
                     return CardImageUrlService.getManaUrls(item);
                 };
             }]
