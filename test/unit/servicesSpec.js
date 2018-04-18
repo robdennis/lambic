@@ -127,7 +127,7 @@ describe('service', function() {
             expect(poolService.get().count()).toBe(1);
             poolService.remove('Mutavault');
             expect(poolService.get().count()).toBe(0);
-        })
+        });
 
         it('should correctly guess what is on a pane', function() {
             poolService.addMany([
@@ -188,7 +188,7 @@ describe('service', function() {
             var whiteCouldCast = regexService.isCastableRegExp(['White']);
 
             expect('{W}').toMatch(whiteCouldCast);
-            expect('{W/2}').toMatch(whiteCouldCast);
+            expect('{2/W}').toMatch(whiteCouldCast);
             expect('{W/P}').toMatch(whiteCouldCast);
             expect('{X}{X}{2}{W}').toMatch(whiteCouldCast);
             expect('{W/B}{R/W}{W/R}').toMatch(whiteCouldCast);
@@ -241,14 +241,17 @@ describe('service', function() {
                     };
                     return angular.equals(expected, actual);
 
-                }
+                },
             });
         });
 
-        it('should correctly estimate colors from a mana cost', function() {
-            expect(all_cards['Elite Vanguard']).toMatchColors(['White']);
-            expect(all_cards['Reaper King']).toMatchColors(['White', 'Blue', 'Black', 'Red', 'Green']);
-            expect(all_cards['Slave of Bolas']).toMatchColors(['Blue', 'Black', 'Red']);
+        it('should correctly estimate colors', function() {
+            expect(all_cards['Elite Vanguard'].manaCost).toMatchColors(['White']);
+            expect(all_cards['Reaper King'].manaCost).toMatchColors(['White', 'Blue', 'Black', 'Red', 'Green']);
+            expect(all_cards['Slave of Bolas'].manaCost).toMatchColors(['Blue', 'Black', 'Red']);
+            var elf = all_cards['Urborg Elf'];
+            expect(elf.manaCost).toMatchColors(['Green']);
+            expect(elf.manaCost + elf.text).toMatchColors(['Blue', 'Black', 'Green']);
         });
     });
 
@@ -287,7 +290,8 @@ describe('service', function() {
             legionnaire = getModded("Porcelain Legionnaire");
             nephilim = getModded('Witch-Maw Nephilim');
             sliverQueen = getModded('Sliver Queen');
-            wwwww = getModded('Who/What/When/Where/Why');
+            //split cards aren't combined
+            //wwwww = getModded('Who/What/When/Where/Why');
             ultimatum = getModded('Cruel Ultimatum');
             divinityOfPride = getModded('Divinity of Pride');
             mutavault = getModded('Mutavault');
@@ -367,7 +371,7 @@ describe('service', function() {
             expect(dynamo).toMatchCategory('Colorless');
         });
 
-        it('should handle mono vs multi vs "normal"color checks', function() {
+        it('should handle mono vs multi vs "normal" color checks', function() {
             expect(eliteVanguard).toMatchCategory('MonoWhite');
             expect(eliteVanguard).toMatchCategory('White');
             expect(eliteVanguard).not.toMatchCategory('White/Black');
@@ -476,6 +480,21 @@ describe('service', function() {
         it('should handle the color castability case', function() {
             expect(eliteVanguard).toMatchCategory('WhiteCastable');
             expect(eliteVanguard).not.toMatchCategory('BlackCastable');
+            expect(sculler).toMatchCategory('White&BlackCastable');
+            expect(sculler).not.toMatchCategory('BlackCastable');
+            expect(sculler).not.toMatchCategory('WhiteCastable');
+        });
+
+        it('should handle the color identity case', function() {
+            expect(eliteVanguard).toMatchCategory('WhiteColorIdentityExclusive');
+            expect(eliteVanguard).toMatchCategory('WhiteColorIdentityInclusive');
+            expect(eliteVanguard).not.toMatchCategory('BlackColorIdentityInclusive');
+            expect(eliteVanguard).not.toMatchCategory('White&BlackColorIdentityExclusive');
+            expect(eliteVanguard).toMatchCategory('White&BlackColorIdentityInclusive');
+            expect(sculler).not.toMatchCategory('WhiteColorIdentityExclusive');
+            expect(sculler).not.toMatchCategory('WhiteColorIdentityInclusive');
+            expect(sculler).toMatchCategory('White&BlackColorIdentityExclusive');
+            expect(sculler).toMatchCategory('White&BlackColorIdentityInclusive');
         });
 
         it('should handle the "any" case', function() {

@@ -10,30 +10,27 @@ function AppCtrl($scope,
                  NamesFromTextService, onBeforeUnload) {
 
     PoolService.subscribe(function(pool) {
+        if ($scope.plaintext == '') {
+            $scope.confirmLeaving()
+        }
         $scope.plaintext = pool.select('name').join('\n');
         $scope.pool = pool;
     });
 
     $scope.makePool = function() {
+        $scope.confirmLeaving()
         PoolService.set(NamesFromTextService.getNames($scope.plaintext));
         $scope.pool = PoolService.get();
     };
 
     $scope.cards = CardCacheService.insert(all_cards);
 
-    // https://github.com/gdi2290/angular-beforeunload
-    var beforeUnload = $scope.$on('$locationChangeStart', function() {
-        if ($scope.plaintext) {
-            onBeforeUnload.init(
-                'Are you sure you want to leave?',
-                'Copy your pool on the left if you want to save it for later'
-            );
-        }
-    });
-
-    $scope.submitPage = function() {
+    $scope.confirmLeaving = function() {
         // If you invoking your reference then your listener becomes null.
-        beforeUnload();
+        onBeforeUnload.init(
+            'Are you sure you want to leave?',
+            'Copy your pool on the left if you want to save it for later'
+        );
     };
 }
 
